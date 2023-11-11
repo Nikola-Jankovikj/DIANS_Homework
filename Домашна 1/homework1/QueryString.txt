@@ -1,0 +1,33 @@
+[out:json];
+area["ISO3166-1"="MK"][boundary=administrative]->.searchArea;
+(
+  // Nodes
+  node(area.searchArea)["amenity"="museum"];
+  node(area.searchArea)["craft"="museum"];
+  node(area.searchArea)["tourism"="museum"];
+  node(area.searchArea)["historic"="museum"];
+  node(area.searchArea)["amenity"="archaeological_site"];
+  node(area.searchArea)["craft"="archaeological_site"];
+  node(area.searchArea)["tourism"="archaeological_site"];
+  node(area.searchArea)["historic"="archaeological_site"];
+  node(area.searchArea)["amenity"="place_of_worship"];
+  node(area.searchArea)["craft"="place_of_worship"];
+  node(area.searchArea)["religion"="christian"];
+  node(area.searchArea)["historic"="place_of_worship"];
+  // Ways
+  way(area.searchArea)["amenity"="museum"];
+  way(area.searchArea)["craft"="museum"];
+  way(area.searchArea)["tourism"="museum"];
+  way(area.searchArea)["historic"="museum"];
+  way(area.searchArea)["amenity"="archaeological_site"];
+  way(area.searchArea)["craft"="archaeological_site"];
+  way(area.searchArea)["tourism"="archaeological_site"];
+  way(area.searchArea)["historic"="archaeological_site"];
+  way(area.searchArea)["amenity"="place_of_worship"];
+  way(area.searchArea)["craft"="place_of_worship"];
+  way(area.searchArea)["religion"="christian"];
+  way(area.searchArea)["historic"="place_of_worship"];
+);
+out body;
+>;
+out skel qt;
