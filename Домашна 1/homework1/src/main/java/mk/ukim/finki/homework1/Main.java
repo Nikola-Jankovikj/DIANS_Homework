@@ -3,9 +3,7 @@ package mk.ukim.finki.homework1;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import mk.ukim.finki.homework1.classes.elements.Element;
-import mk.ukim.finki.homework1.classes.filters.Filter;
-import mk.ukim.finki.homework1.classes.filters.FilterAmenityAndTourism;
-import mk.ukim.finki.homework1.classes.filters.FilterName;
+import mk.ukim.finki.homework1.classes.filters.*;
 import mk.ukim.finki.homework1.classes.openStreetMap.OpenStreetMap;
 import mk.ukim.finki.homework1.classes.pipe.Pipe;
 import mk.ukim.finki.homework1.classes.processNodeData.ProcessNodeData;
@@ -24,10 +22,6 @@ import java.util.List;
 public class Main {
     private static final String queryFilePath = "QueryString.txt";
     public static final HashMap<String, Element> elementsById = new HashMap<>();
-    private static final List<Filter<Element>> FILTERS = new ArrayList<Filter<Element>>(Arrays.asList(
-            new FilterAmenityAndTourism(),
-            new FilterName()
-    ));
 
     public static void main(String[] args) throws IOException {
 
@@ -52,7 +46,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        File jsonFile = new File("output.json");
+        File jsonFile = new File("jsonData.json");
         ObjectMapper objectMapper = new ObjectMapper();
 
         JsonNode rootNode = null;
@@ -64,8 +58,18 @@ public class Main {
 
         JsonNode elementsNode = rootNode.get("elements");
         List<Element> elementList = new ArrayList<>();
-        Pipe<Element> pipe = new Pipe<>();
-        FILTERS.forEach(pipe::addFilter);
+        Pipe<Element> museumPipe = new Pipe<>();
+        museumPipe.addFilter(new MuseumFilter());
+        museumPipe.addFilter(new NameFilter());
+
+        Pipe<Element> archPipe = new Pipe<>();
+        archPipe.addFilter(new ArchaeologicalSiteFilter());
+        archPipe.addFilter(new NameFilter());
+
+        Pipe<Element> monasteryPipe = new Pipe<>();
+        monasteryPipe.addFilter(new MonasteryReligionFilter());
+        monasteryPipe.addFilter(new MonasteryTagsFilter());
+        monasteryPipe.addFilter(new NameFilter());
 
 
         for (JsonNode node : elementsNode) {
@@ -81,13 +85,17 @@ public class Main {
         }
 
         for (Element element : elementsById.values()) {
-            element = pipe.runFilter(element);
-            if(element != null) elementList.add(element);
+            Element element1 = museumPipe.runFilter(element);
+            if(element1 != null) elementList.add(element1);
+            Element element2 = monasteryPipe.runFilter(element);
+            if(element2 != null) elementList.add(element2);
+            Element element3 = archPipe.runFilter(element);
+            if(element3 != null) elementList.add(element3);
         }
 
 
 
-        FileWriter fileWriter = new FileWriter("bean.csv");
+        FileWriter fileWriter = new FileWriter("output.csv");
         elementList.forEach(e -> {
             try {
                 fileWriter.write(e.toString() + "\n");
