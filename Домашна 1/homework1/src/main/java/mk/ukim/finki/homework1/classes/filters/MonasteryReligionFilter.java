@@ -2,15 +2,10 @@ package mk.ukim.finki.homework1.classes.filters;
 
 import mk.ukim.finki.homework1.classes.elements.Element;
 
-public class FilterName implements Filter<Element> {
+public class MonasteryReligionFilter implements Filter<Element> {
     @Override
     public Element execute(Element element) {
-        if (element == null) {
-            return null;
-        }
-        if (element.getName().isEmpty()) {
-            return null;
-        }
+        if ((element.getAmenity().equals("place_of_worship") && !element.getReligion().equals("christian"))) return null;
         return element;
     }
 }

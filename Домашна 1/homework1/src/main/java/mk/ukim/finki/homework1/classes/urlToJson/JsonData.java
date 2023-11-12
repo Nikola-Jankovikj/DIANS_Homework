@@ -25,7 +25,7 @@ public class JsonData {
             InputStream inputStream = connection.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
-            FileWriter fileWriter = new FileWriter("output.json");
+            FileWriter fileWriter = new FileWriter("jsonData.json");
             String line;
             while ((line = reader.readLine()) != null) {
                 fileWriter.write(line);

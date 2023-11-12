@@ -16,6 +16,8 @@ public class ProcessNodeData {
         String enNameValue = tagsNode.path("name:en").asText();
         String amenity = tagsNode.path("amenity").asText();
         String tourism = tagsNode.path("tourism").asText();
+        String historic = tagsNode.path("historic").asText();
+        String religion = tagsNode.path("religion").asText();
         //String phone = tagsNode.path("phone").asText();
         //String email = tagsNode.path("email").asText();
 
@@ -32,7 +34,7 @@ public class ProcessNodeData {
         if(nameValue.isEmpty()){
             nameValue = enNameValue;
         }
-        return new Element(id, nameValue, amenity, tourism, lat, lon);
+        return new Element(id, nameValue, amenity, tourism, historic, religion, lat, lon);
     }
 
 

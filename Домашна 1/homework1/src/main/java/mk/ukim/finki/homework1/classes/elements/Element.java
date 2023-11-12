@@ -10,14 +10,18 @@ public class Element {
     private String type;
     private String amenity;
     private String tourism;
+    private String historic;
+    private String religion;
     private String lat;
     private String lon;
 
-    public Element(String id, String name, String amenity, String tourism, String lat, String lon) {
+    public Element(String id, String name, String amenity, String tourism, String historic, String religion, String lat, String lon) {
         this.id = id;
         this.name = name;
         this.amenity = amenity;
         this.tourism = tourism;
+        this.historic = historic;
+        this.religion = religion;
         this.lat = lat;
         this.lon = lon;
     }
