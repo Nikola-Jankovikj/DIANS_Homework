@@ -1,10 +1,10 @@
 package mk.ukim.finki.treasuredroutes.Web;
 
 import mk.ukim.finki.treasuredroutes.Model.Element;
+import mk.ukim.finki.treasuredroutes.Service.DataLoaderService;
 import mk.ukim.finki.treasuredroutes.Service.ElementService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,12 +15,11 @@ import java.util.List;
 @Validated
 @CrossOrigin(origins="*")
 public class ElementController {
-    ElementService elementService;
+    private final ElementService elementService;
 
     public ElementController(ElementService elementService) {
         this.elementService = elementService;
     }
-
     @GetMapping("/all")
     public ResponseEntity<List<Element>> findAll(){
         return new ResponseEntity<>(elementService.findAll(), HttpStatus.OK);
