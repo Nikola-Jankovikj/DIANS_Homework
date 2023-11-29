@@ -7,14 +7,14 @@ import MarkerClusterGroup from "react-leaflet-cluster";
 import {Routes, Route, useNavigate} from "react-router-dom";
 import './Home.css';
 
-const Home = () => {
+const Museums = () => {
 
     const navigate = useNavigate()
 
     const [state, setState] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:8080/api/all')
+        fetch('http://localhost:8080/api/museums')
             .then(response => response.json())
             .then(data => {
                 setState(data);
@@ -27,11 +27,11 @@ const Home = () => {
     })
 
     const navigateHome = () => {
-        navigate('');
+        navigate('/Home');
     }
 
     const navigateMuseums = () => {
-        navigate('/Museums');
+        navigate('');
     }
 
     const navigateArchaeologicalSites = () => {
@@ -71,4 +71,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default Museums

@@ -6,15 +6,14 @@ import {Icon} from "leaflet/dist/leaflet-src.esm";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import {Routes, Route, useNavigate} from "react-router-dom";
 import './Home.css';
-
-const Home = () => {
+const Monasteries = () => {
 
     const navigate = useNavigate()
 
     const [state, setState] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:8080/api/all')
+        fetch('http://localhost:8080/api/monasteries')
             .then(response => response.json())
             .then(data => {
                 setState(data);
@@ -27,7 +26,7 @@ const Home = () => {
     })
 
     const navigateHome = () => {
-        navigate('');
+        navigate('/Home');
     }
 
     const navigateMuseums = () => {
@@ -39,7 +38,7 @@ const Home = () => {
     }
 
     const navigateMonasteries = () => {
-        navigate('/Monasteries');
+        navigate('');
     }
 
     return(
@@ -71,4 +70,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default Monasteries

@@ -11,3 +11,18 @@
 .leaflet-container{
     height: 100vh;
 }
+
+#nav{
+    width: 550px;
+    height: 250px;
+    top: 20px;
+    right: 20px;
+    position: absolute;
+    z-index: 400;
+    padding: 10px;
+}
+
+#nav button{
+    width: 100px;
+    height: 40px;
+}
