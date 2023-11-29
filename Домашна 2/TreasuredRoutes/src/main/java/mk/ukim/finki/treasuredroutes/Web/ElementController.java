@@ -1,7 +1,6 @@
 package mk.ukim.finki.treasuredroutes.Web;
 
 import mk.ukim.finki.treasuredroutes.Model.Element;
-import mk.ukim.finki.treasuredroutes.Service.DataLoaderService;
 import mk.ukim.finki.treasuredroutes.Service.ElementService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +27,21 @@ public class ElementController {
     @GetMapping("/{id}")
     public ResponseEntity<Element> findById(@PathVariable Long id){
         return new ResponseEntity<>(elementService.findById(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/monasteries")
+    public ResponseEntity<List<Element>> findMonasteries(){
+        return new ResponseEntity<>(elementService.findMonasteries(), HttpStatus.OK);
+    }
+
+    @GetMapping("/archaeologicalSites")
+    public ResponseEntity<List<Element>> findArchaeologicalSites(){
+        return new ResponseEntity<>(elementService.findArchaeologicalSites(), HttpStatus.OK);
+    }
+
+    @GetMapping("/museums")
+    public ResponseEntity<List<Element>> findMuseums(){
+        return new ResponseEntity<>(elementService.findMuseums(), HttpStatus.OK);
     }
 
 

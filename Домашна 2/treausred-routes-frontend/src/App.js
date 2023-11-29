@@ -1,26 +1,13 @@
 import './App.css';
-import {useEffect, useState} from "react";
+import Home from "./Home";
+import {Route, Router} from "react-router-dom";
 
 function App() {
 
-    const [state, setState] = useState([]);
+    return(
+        <Home />
+    );
 
-    useEffect(() => {
-        fetch('http://localhost:8080/api/all')
-            .then(response => response.json())
-            .then(data => {
-                setState(data);
-            })
-    }, []);
-
-
-  return (
-      state.map(obj =>
-              <div key={obj.id}>
-                  {obj.name}
-              </div>
-          )
-  );
 }
 
 export default App;
