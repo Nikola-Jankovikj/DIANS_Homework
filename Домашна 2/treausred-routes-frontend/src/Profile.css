@@ -1,0 +1,36 @@
+.profile-header {
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.back-button {
+    background-color: #2980b9;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.favorites-bar {
+    margin-top: 20px;
+}
+
+.favorites-bar h2 {
+    color: #333;
+}
+
+.favorites-bar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.favorites-bar li {
+    margin: 5px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+}

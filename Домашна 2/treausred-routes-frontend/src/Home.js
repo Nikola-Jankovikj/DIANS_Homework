@@ -1,11 +1,14 @@
-import {MapContainer, Marker, TileLayer, Popup} from "react-leaflet";
+import {MapContainer, Marker, TileLayer, Popup, ZoomControl} from "react-leaflet";
 import "leaflet/dist/leaflet.css"
 import {useEffect, useState} from "react";
 import {Icon} from "leaflet/dist/leaflet-src.esm";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import './MapComponent.css';
+import {useNavigate} from "react-router-dom";
 
 const Home = () => {
+
+    const navigate = useNavigate()
 
     const [url, setUrl] = useState('http://localhost:8080/api/all')
     const [state, setState] = useState([]);
@@ -23,6 +26,10 @@ const Home = () => {
         iconUrl: require('./resources/location-pin.png'),
         iconSize: [38, 38]
     })
+
+    const navigateProfile = () => {
+        navigate("/profile")
+    }
 
     const findAll = () => {
         setUrl('http://localhost:8080/api/all')
@@ -42,17 +49,30 @@ const Home = () => {
 
     return(
 
-        <MapContainer center={[41.9981, 21.4254]} zoom={15}>
+        <MapContainer center={[41.9981, 21.4254]} zoom={15} zoomControl={false}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
 
-            <div id="nav">
-                <button onClick={findAll}>All</button>
-                <button onClick={findMuseums}>Museums</button>
-                <button onClick={findArchaeologicalSites}>Archaeological Sites</button>
-                <button onClick={findMonasteries}>Monasteries</button>
+            <div id={"top-bar"}>
+                <div id={"search-and-filter"}>
+                    <div id="search-bar">
+                        <input type="text" placeholder="Search..." />
+                        <button>Search</button>
+                    </div>
+
+                    <div id="nav">
+                        <button onClick={findAll}>All</button>
+                        <button onClick={findMuseums}>Museums</button>
+                        <button onClick={findArchaeologicalSites}>Archaeological Sites</button>
+                        <button onClick={findMonasteries}>Monasteries</button>
+                    </div>
+                </div>
+
+                <div id="profile-icon" onClick={navigateProfile}>
+                    <img src="/images/user.png" alt="Profile Image"/>
+                </div>
             </div>
 
             <MarkerClusterGroup chunkedLoading>
@@ -62,6 +82,8 @@ const Home = () => {
                     </Marker>
                 )}
             </MarkerClusterGroup>
+
+            <ZoomControl position="bottomright" />
 
         </MapContainer>
     )
