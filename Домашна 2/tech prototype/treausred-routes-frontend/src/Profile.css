@@ -6,6 +6,12 @@
     align-items: center;
 }
 
+.profile-header h1 {
+    font-family: "Roboto Thin", sans-serif;
+    font-weight: lighter;
+    margin-left: 30px;
+}
+
 .back-button {
     background-color: #2980b9;
     color: #fff;
@@ -15,22 +21,44 @@
     cursor: pointer;
 }
 
-.favorites-bar {
-    margin-top: 20px;
+#profile-icon-acc{
+    padding: 5px;
+    z-index: 500;
+    cursor: pointer;
 }
 
-.favorites-bar h2 {
-    color: #333;
+#profile-icon-acc img {
+    width: 100px;
+    height: 100px;
+    max-width: 100%;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    border: 2px solid #3498db;
 }
 
-.favorites-bar ul {
-    list-style-type: none;
-    padding: 0;
+#settings {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    width: 40%;
+    padding: 30px;
+    margin: 80px;
 }
 
-.favorites-bar li {
-    margin: 5px 0;
-    padding: 10px;
-    border: 1px solid #ddd;
-    background-color: #f9f9f9;
+.row {
+    display: flex;
+    align-items: center;
+    height: 120px;
+}
+
+.row div {
+    display: flex;
+    padding-right: 20px;
+    width: 110px;
+    justify-content: end;
+}
+
+.row button {
+    width: 200px;
+    height: 30px;
+    margin-left: 10px;
 }

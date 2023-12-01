@@ -72,11 +72,42 @@
     cursor: pointer;
 }
 
-#profile-icon img{
+#dropdown-basic{
     width: 100px;
     height: 100px;
     max-width: 100%;
     border-radius: 50%;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
     border: 2px solid #3498db;
+}
+
+#dropdown-basic img {
+    width: 95px;
+    height: 95px;
+    border-radius: 50%;
+}
+
+#dropdown-menu {
+    width: 100px;
+    background: whitesmoke;
+    border: 1px solid darkslategray;
+    border-radius: 10px;
+    padding: 5px;
+    text-align: center;
+}
+
+#dropdown-menu .dropdown-item {
+    padding: 10px;
+    display: block;
+    text-decoration: none;
+    color: darkslategray;
+    font-size: 14px;
+}
+
+.leaflet-popup-content {
+    margin: 0;
+}
+
+.leaflet-popup-content-wrapper {
+    width: 340px;
 }
