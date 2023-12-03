@@ -12,18 +12,29 @@ const Profile = () => {
     return(
         <div className="profile-container">
             <div className="profile-header">
-                <button className="back-button" onClick={navigateHome}> Back </button>
-                <h1>Your Profile</h1>
+                <button className="back-button" onClick={navigateHome}> &#x21D0; </button>
+                <h1>ACCOUNT SETTINGS</h1>
             </div>
-            <div className="favorites-bar">
-                <h2>Favorites</h2>
-                <ul>
-                    Favourite place 1
-                </ul>
-                <ul>
-                    Favourite place 2
-                </ul>
-            </div>
+            <section id="settings">
+                <div className="row">
+                    <div id="profile-icon-acc">
+                        <img src="/images/user.png" alt="Profile Image"/>
+                    </div>
+                    <button>change your profile picture</button>
+                </div>
+                <div className="row">
+                    <div>e-mail</div>
+                    <button>change your e-mail address</button>
+                </div>
+                <div className="row">
+                    <div>password</div>
+                    <button>change your password</button>
+                </div>
+                <div className="row">
+                    <div>log out</div>
+                    <button>log out</button>
+                </div>
+            </section>
         </div>
     )
 }

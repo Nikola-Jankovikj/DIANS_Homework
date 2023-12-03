@@ -5,6 +5,8 @@ import {Icon} from "leaflet/dist/leaflet-src.esm";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import './MapComponent.css';
 import {useNavigate} from "react-router-dom";
+import Dropdown from 'react-bootstrap/Dropdown';
+
 
 const Home = () => {
 
@@ -70,15 +72,38 @@ const Home = () => {
                     </div>
                 </div>
 
-                <div id="profile-icon" onClick={navigateProfile}>
-                    <img src="/images/user.png" alt="Profile Image"/>
-                </div>
+                {/*<div id="profile-icon" onClick={navigateProfile}>*/}
+                {/*    <img src="/images/user.png" alt="Favorites Image"/>*/}
+                {/*</div>*/}
+
+                <Dropdown id="profile-icon">
+                    <Dropdown.Toggle variant="success" id="dropdown-basic">
+                        <img src="/images/user.png" alt="Profile Image"/>
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu id="dropdown-menu">
+                        <Dropdown.Item href="/favorites">Favorites</Dropdown.Item>
+                        <Dropdown.Item href="/profile">Account</Dropdown.Item>
+                        <Dropdown.Item href="/login">Log out</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
             </div>
 
             <MarkerClusterGroup chunkedLoading>
                 {state.map(obj =>
                     <Marker key={obj.id} position={[obj.lat, obj.lon]} icon={customIcon}>
-                        <Popup><h2>{obj.name}</h2></Popup>
+                        <Popup>
+                            {/*<h2>{obj.name}</h2>*/}
+                            <div className="card">
+                                <h2 className="cardTitle">{obj.name}</h2>
+                                <section className="cardFt">
+                                    <div className="favorite">&#9825;</div>
+                                    <div className="rating">
+                                        &#9733; &#9733; &#9733; &#9733; &#9734;
+                                    </div>
+                                </section>
+                            </div>
+                        </Popup>
                     </Marker>
                 )}
             </MarkerClusterGroup>
