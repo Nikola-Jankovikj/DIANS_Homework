@@ -6,9 +6,13 @@ import MarkerClusterGroup from "react-leaflet-cluster";
 import './MapComponent.css';
 import {useNavigate} from "react-router-dom";
 import Dropdown from 'react-bootstrap/Dropdown';
+import './Search.css'
 
 
 const Home = () => {
+
+    const initialCenter = [41.6090, 21.7453]
+    var mapCenter = initialCenter
 
     const navigate = useNavigate()
 
@@ -49,9 +53,58 @@ const Home = () => {
         setUrl('http://localhost:8080/api/monasteries')
     }
 
+    const [query, setQuery] = useState('');
+    const [suggestions, setSuggestions] = useState([]);
+
+    const updateQuery = (event) => {
+        setQuery(event.target.value)
+    }
+
+    useEffect(() => {
+        fetch(`http://localhost:8080/api/search?query=${query}`)
+            .then(response => response.json())
+            .then(suggestions => {
+                console.log(suggestions)
+                setSuggestions(suggestions);
+            })
+    }, [query]);
+
+
+    const selectSuggestion = (element) => {
+        setQuery(element.name)
+    }
+
+    const onSearch = (searchTerm) => {
+        setUrl(`http://localhost:8080/api/search?query=${searchTerm}`);
+        mapCenter = calculateNewCenter()
+        console.log(mapCenter)
+    }
+
+    const calculateNewCenter = () => {
+        if (state.length === 0){
+            return initialCenter
+        }
+
+        if(state.length === 1){
+            console.log(`INSIDE 1: LAT: ${state.lat} AND LON: ${state.lon}`)
+            return [state[0].lat, state[0].lon]
+        }
+
+        const latitutes = state.map((el) => el.lat).reduce((left, right) => left + right, 0);
+        const longitutes = state.map((el) => el.lon).reduce((left, right) => left + right, 0);
+
+        console.log(latitutes)
+        console.log(longitutes)
+
+        const avgLat = latitutes / state.length
+        const avgLon = longitutes / state.length
+
+        return [avgLat, avgLon]
+    }
+
     return(
 
-        <MapContainer center={[41.9981, 21.4254]} zoom={15} zoomControl={false}>
+        <MapContainer center={mapCenter} zoom={9} zoomControl={false}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -60,9 +113,16 @@ const Home = () => {
             <div id={"top-bar"}>
                 <div id={"search-and-filter"}>
                     <div id="search-bar">
-                        <input type="text" placeholder="Search..." />
-                        <button>Search</button>
+                        <input type="text" value={query} onChange={updateQuery} placeholder="Search..." />
+                        <button onClick={() => onSearch(query)}>Search</button>
+                        <div className={"suggestions-dropdown"}>
+                            {suggestions.filter((suggestion) => {
+                                const search = query.toLowerCase()
+                                return search !== '' && suggestion.name.toLowerCase() !== search
+                            }).map((element) => (<div onClick={() => selectSuggestion(element)} className="dropdown-item">{element.name}</div>))}
+                        </div>
                     </div>
+
 
                     <div id="nav">
                         <button onClick={findAll}>All</button>
