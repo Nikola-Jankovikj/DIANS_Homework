@@ -1,18 +1,28 @@
-import {MapContainer, Marker, TileLayer, Popup, ZoomControl} from "react-leaflet";
+import {MapContainer, Marker, TileLayer, Popup, ZoomControl, useMap} from "react-leaflet";
 import "leaflet/dist/leaflet.css"
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Icon} from "leaflet/dist/leaflet-src.esm";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import './MapComponent.css';
 import {useNavigate} from "react-router-dom";
 import Dropdown from 'react-bootstrap/Dropdown';
 import './Search.css'
+import MapPanAndZoomController from "./MapPanAndZoomController";
 
 
 const Home = () => {
 
+    const customIcon = new Icon({
+        iconUrl: require('./resources/location-pin.png'),
+        iconSize: [38, 38]
+    })
+
+    const controllerRef = useRef()
+
     const initialCenter = [41.6090, 21.7453]
-    var mapCenter = initialCenter
+    const initialZoom = 9
+    // var mapCenter = initialCenter
+    // var mapZoom = initialZoom
 
     const navigate = useNavigate()
 
@@ -27,11 +37,6 @@ const Home = () => {
                 setState(data);
             })
     }, [url]);
-
-    const customIcon = new Icon({
-        iconUrl: require('./resources/location-pin.png'),
-        iconSize: [38, 38]
-    })
 
     const navigateProfile = () => {
         navigate("/profile")
@@ -74,41 +79,95 @@ const Home = () => {
         setQuery(element.name)
     }
 
-    const onSearch = (searchTerm) => {
-        setUrl(`http://localhost:8080/api/search?query=${searchTerm}`);
-        mapCenter = calculateNewCenter()
-        console.log(mapCenter)
+
+    var objsForFocus = []
+
+    const setObjsForFocus = (data) => {
+        objsForFocus = data
+    }
+    const onSearch = async (searchTerm) => {
+
+        const fetchData = async () => {
+            setUrl(`http://localhost:8080/api/search?query=${searchTerm}`);
+            await fetch(`http://localhost:8080/api/search?query=${searchTerm}`)
+                .then(data => data.json())
+                .then(data => {
+                    setObjsForFocus(data)
+                })
+        }
+
+        await fetchData()
+        console.log('MAJKATA KRAJOT: ' + objsForFocus)
+        //setUrl(`http://localhost:8080/api/search?query=${searchTerm}`);
+        var coordinates = calculateNewCenter(objsForFocus)
+        console.log('BEFORE CONTROLLER ' + coordinates)
+        if(coordinates.length === 1){
+            controllerRef.current.focusTarget(coordinates[0])
+        }
+        else{
+            var boundingBox = getBoundingBox(coordinates)
+            console.log("BOUNDING BOX" + boundingBox)
+            controllerRef.current.focusMap(boundingBox)
+        }
     }
 
-    const calculateNewCenter = () => {
-        if (state.length === 0){
-            return initialCenter
+    function getBoundingBox(coordinates) {
+        if (coordinates.length === 0) {
+            return null; // No coordinates provided
         }
 
-        if(state.length === 1){
-            console.log(`INSIDE 1: LAT: ${state.lat} AND LON: ${state.lon}`)
-            return [state[0].lat, state[0].lon]
+        // Initialize min and max values
+        let minLat = coordinates[0][0];
+        let maxLat = coordinates[0][0];
+        let minLon = coordinates[0][1];
+        let maxLon = coordinates[0][1];
+
+        // Iterate through the coordinates to find min and max values
+        for (const [lat, lon] of coordinates) {
+            minLat = Math.min(minLat, lat);
+            maxLat = Math.max(maxLat, lat);
+            minLon = Math.min(minLon, lon);
+            maxLon = Math.max(maxLon, lon);
         }
 
-        const latitutes = state.map((el) => el.lat).reduce((left, right) => left + right, 0);
-        const longitutes = state.map((el) => el.lon).reduce((left, right) => left + right, 0);
+        // Return the two corners of the bounding box as [[minLat, minLon], [maxLat, maxLon]]
+        return [
+            [minLat, minLon],
+            [maxLat, maxLon]
+        ];
+    }
 
-        console.log(latitutes)
-        console.log(longitutes)
+    const calculateNewCenter = (objs) => {
+        if (objs.length === 0){
+            return [initialCenter]
+        }
 
-        const avgLat = latitutes / state.length
-        const avgLon = longitutes / state.length
+        if(objs.length === 1){
+            console.log(typeof parseFloat(objs[0].lat))
+            console.log(`INSIDE 1: LAT: ${objs[0].lat} AND LON: ${objs[0].lon}`)
+            return [[parseFloat(objs[0].lat), parseFloat(objs[0].lon)]]
+        }
 
-        return [avgLat, avgLon]
+
+        const latitutes = objs.map((el) => parseFloat(el.lat))
+        const longitutes = objs.map((el) => parseFloat(el.lon))
+        console.log('MOST IMPORTANT LAT: ' + latitutes + '\n LON: ' + longitutes)
+
+       //const latLonArray = latitutes.flatMap((lat, index) => [lat, longitutes[index]]);
+        const latLonArray = latitutes.map((lat, index) => [lat, longitutes[index]])
+        console.log('INSIDE FUNC ' + latLonArray)
+       return latLonArray
     }
 
     return(
 
-        <MapContainer center={mapCenter} zoom={9} zoomControl={false}>
+        <MapContainer center={initialCenter} zoom={initialZoom} zoomControl={false}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
+
+            <MapPanAndZoomController ref={controllerRef}/>
 
             <div id={"top-bar"}>
                 <div id={"search-and-filter"}>
