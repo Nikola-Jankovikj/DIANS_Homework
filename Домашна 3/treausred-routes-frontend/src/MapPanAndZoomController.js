@@ -1,6 +1,7 @@
 import {useMap} from "react-leaflet";
 import {forwardRef, useImperativeHandle} from "react";
 import {latLngBounds} from "leaflet/dist/leaflet-src.esm";
+import {setOptions} from "leaflet/src/core";
 
 const MapPanAndZoomController = forwardRef((props, ref) => {
 
@@ -18,7 +19,12 @@ const MapPanAndZoomController = forwardRef((props, ref) => {
     }
 
     const focusOnTarget = (coordinates) => {
-        myMap.setView(coordinates, 15)
+        myMap.setView(coordinates, 15, {
+            "animate": true,
+            "pan": {
+                "duration": 10
+            }
+        })
     }
 
     const focusWholeMap = (coordinates) => {

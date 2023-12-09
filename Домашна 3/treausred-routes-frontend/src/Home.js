@@ -174,7 +174,6 @@ const Home = () => {
             <MapPanAndZoomController ref={controllerRef}/>
 
             <div id={"top-bar"}>
-                <div id={"search-and-filter"}>
                     <div id="search-bar">
                         <input type="text" value={query} onChange={updateQuery} placeholder="Search..." />
                         <button onClick={() => onSearch(query)}>Search</button>
@@ -193,8 +192,6 @@ const Home = () => {
                         <button onClick={findArchaeologicalSites}>Archaeological Sites</button>
                         <button onClick={findMonasteries}>Monasteries</button>
                     </div>
-                </div>
-
                 {/*<div id="profile-icon" onClick={navigateProfile}>*/}
                 {/*    <img src="/images/user.png" alt="Favorites Image"/>*/}
                 {/*</div>*/}
