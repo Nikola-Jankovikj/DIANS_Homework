@@ -7,11 +7,15 @@ const MapPanAndZoomController = forwardRef((props, ref) => {
     useImperativeHandle(ref, () => {
         return {
             focusMap: focusWholeMap,
-            focusTarget: focusOnTarget
+            focusTarget: focusOnTarget,
+            resetMapFocus: resetMapFocus
         }
     })
     const myMap = useMap()
-    
+
+    const resetMapFocus = (defaultView, defaultZoom) => {
+        myMap.setView(defaultView, defaultZoom)
+    }
 
     const focusOnTarget = (coordinates) => {
         myMap.setView(coordinates, 15)

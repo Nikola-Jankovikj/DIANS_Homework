@@ -24,6 +24,12 @@ const Home = () => {
     // var mapCenter = initialCenter
     // var mapZoom = initialZoom
 
+    var objsForFocus = []
+
+    const setObjsForFocus = (data) => {
+        objsForFocus = data
+    }
+
     const navigate = useNavigate()
 
     const [url, setUrl] = useState('http://localhost:8080/api/all')
@@ -44,18 +50,22 @@ const Home = () => {
 
     const findAll = () => {
         setUrl('http://localhost:8080/api/all')
+        controllerRef.current.resetMapFocus(initialCenter, initialZoom)
     }
 
     const findMuseums = () => {
         setUrl('http://localhost:8080/api/museums')
+        controllerRef.current.resetMapFocus(initialCenter, initialZoom)
     }
 
     const findArchaeologicalSites = () => {
         setUrl('http://localhost:8080/api/archaeologicalSites')
+        controllerRef.current.resetMapFocus(initialCenter, initialZoom)
     }
 
     const findMonasteries = () => {
         setUrl('http://localhost:8080/api/monasteries')
+        controllerRef.current.resetMapFocus(initialCenter, initialZoom)
     }
 
     const [query, setQuery] = useState('');
@@ -79,12 +89,6 @@ const Home = () => {
         setQuery(element.name)
     }
 
-
-    var objsForFocus = []
-
-    const setObjsForFocus = (data) => {
-        objsForFocus = data
-    }
     const onSearch = async (searchTerm) => {
 
         const fetchData = async () => {
