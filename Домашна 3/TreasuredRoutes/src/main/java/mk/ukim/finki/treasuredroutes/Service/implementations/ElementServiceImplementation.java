@@ -48,11 +48,11 @@ public class ElementServiceImplementation implements ElementService {
     @Override
     public List<Element> searchPlaces(String query) {
         Set<Element> suggestions = new LinkedHashSet<>(elementRepository.findAll().stream()
-                .filter(element -> element.getName().toLowerCase().startsWith(query.toLowerCase()))
+                .filter(element -> element.getName().strip().toLowerCase().startsWith(query.toLowerCase()))
                 .toList());
 
         suggestions.addAll(elementRepository.findAll().stream()
-                .filter(element -> element.getName().toLowerCase().contains(query.toLowerCase()))
+                .filter(element -> element.getName().strip().toLowerCase().contains(query.toLowerCase()))
                 .toList());
 
         return new ArrayList<>(suggestions);
@@ -61,6 +61,6 @@ public class ElementServiceImplementation implements ElementService {
 
     @Override
     public List<Element> findByName(String name) {
-        return elementRepository.findAll().stream().filter(element -> element.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
+        return elementRepository.findAll().stream().filter(element -> element.getName().strip().equalsIgnoreCase(name)).collect(Collectors.toList());
     }
 }
