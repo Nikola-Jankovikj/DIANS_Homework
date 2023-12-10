@@ -19,12 +19,8 @@ const MapPanAndZoomController = forwardRef((props, ref) => {
     }
 
     const focusOnTarget = (coordinates) => {
-        myMap.setView(coordinates, 15, {
-            "animate": true,
-            "pan": {
-                "duration": 10
-            }
-        })
+        myMap.setView(coordinates, 15)
+
     }
 
     const focusWholeMap = (coordinates) => {
