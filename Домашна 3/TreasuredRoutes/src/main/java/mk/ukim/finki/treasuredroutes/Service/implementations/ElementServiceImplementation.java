@@ -6,7 +6,10 @@ import mk.ukim.finki.treasuredroutes.Repository.ElementRepository;
 import mk.ukim.finki.treasuredroutes.Service.ElementService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,16 +32,35 @@ public class ElementServiceImplementation implements ElementService {
 
     @Override
     public List<Element> findMuseums() {
-        return elementRepository.findAll().stream().filter(element -> element.getType().strip().toLowerCase().equals("музеј")).collect(Collectors.toList());
+        return elementRepository.findAll().stream().filter(element -> element.getType().strip().equalsIgnoreCase("музеј")).collect(Collectors.toList());
     }
 
     @Override
     public List<Element> findArchaeologicalSites() {
-        return elementRepository.findAll().stream().filter(element -> element.getType().strip().toLowerCase().equals("археолошки локалитет")).collect(Collectors.toList());
+        return elementRepository.findAll().stream().filter(element -> element.getType().strip().equalsIgnoreCase("археолошки локалитет")).collect(Collectors.toList());
     }
 
     @Override
     public List<Element> findMonasteries() {
-        return elementRepository.findAll().stream().filter(element -> element.getType().strip().toLowerCase().equals("манастир")).collect(Collectors.toList());
+        return elementRepository.findAll().stream().filter(element -> element.getType().strip().equalsIgnoreCase("манастир")).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Element> searchPlaces(String query) {
+        Set<Element> suggestions = new LinkedHashSet<>(elementRepository.findAll().stream()
+                .filter(element -> element.getName().strip().toLowerCase().startsWith(query.toLowerCase()))
+                .toList());
+
+        suggestions.addAll(elementRepository.findAll().stream()
+                .filter(element -> element.getName().strip().toLowerCase().contains(query.toLowerCase()))
+                .toList());
+
+        return new ArrayList<>(suggestions);
+       // return elementRepository.findAll().stream().filter(element -> element.getName().toLowerCase().contains(query.toLowerCase())).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Element> findByName(String name) {
+        return elementRepository.findAll().stream().filter(element -> element.getName().strip().equalsIgnoreCase(name)).collect(Collectors.toList());
     }
 }

@@ -44,5 +44,18 @@ public class ElementController {
         return new ResponseEntity<>(elementService.findMuseums(), HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Element>> findSimilarTo(@RequestParam(required = false) String query){
+        if(query == null){
+            return new ResponseEntity<>(List.of(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(elementService.searchPlaces(query), HttpStatus.OK);
+    }
+
+    @GetMapping("/search/{name}")
+    public ResponseEntity<List<Element>> findElement(@PathVariable String name){
+        return new ResponseEntity<>(elementService.findByName(name), HttpStatus.OK);
+    }
+
 
 }

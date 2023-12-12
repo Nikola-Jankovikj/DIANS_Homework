@@ -1,22 +1,32 @@
-import {MapContainer, Marker, TileLayer, Popup, ZoomControl} from "react-leaflet";
+import {MapContainer, Marker, TileLayer, Popup, ZoomControl, useMap} from "react-leaflet";
 import "leaflet/dist/leaflet.css"
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Icon} from "leaflet/dist/leaflet-src.esm";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import './MapComponent.css';
-import {useNavigate} from "react-router-dom";
 import Dropdown from 'react-bootstrap/Dropdown';
+import './Search.css'
+import MapPanAndZoomController from "./MapPanAndZoomController";
+import NavComponent from "./NavComponent";
+import SearchComponent from "./SearchComponent";
 
 
 const Home = () => {
 
-    const navigate = useNavigate()
+    const customIcon = new Icon({
+        iconUrl: require('./resources/location-pin.png'),
+        iconSize: [38, 38]
+    })
+
+    const controllerRef = useRef()
+
+    const initialCenter = [41.6090, 21.7453]
+    const initialZoom = 9
 
     const [url, setUrl] = useState('http://localhost:8080/api/all')
     const [state, setState] = useState([]);
 
     useEffect(() => {
-        console.log(url)
         fetch(url)
             .then(response => response.json())
             .then(data => {
@@ -24,57 +34,46 @@ const Home = () => {
             })
     }, [url]);
 
-    const customIcon = new Icon({
-        iconUrl: require('./resources/location-pin.png'),
-        iconSize: [38, 38]
-    })
-
-    const navigateProfile = () => {
-        navigate("/profile")
+    const updateMapViaNavButtons = (selectedFilter) => {
+        setUrl(selectedFilter)
+        controllerRef.current.resetMapFocus(initialCenter, initialZoom)
     }
 
-    const findAll = () => {
-        setUrl('http://localhost:8080/api/all')
+    const updateMapViaSearch = (selectedQuery) => {
+        setUrl(selectedQuery)
     }
 
-    const findMuseums = () => {
-        setUrl('http://localhost:8080/api/museums')
+    const focusTarget = (coordinates) => {
+        controllerRef.current.focusTarget(coordinates)
     }
 
-    const findArchaeologicalSites = () => {
-        setUrl('http://localhost:8080/api/archaeologicalSites')
+    const focusMap = (coordinates) => {
+        controllerRef.current.focusMap(coordinates)
     }
 
-    const findMonasteries = () => {
-        setUrl('http://localhost:8080/api/monasteries')
-    }
 
     return(
 
-        <MapContainer center={[41.9981, 21.4254]} zoom={15} zoomControl={false}>
+        <MapContainer center={initialCenter} zoom={initialZoom} zoomControl={false}>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
 
-            <div id={"top-bar"}>
-                <div id={"search-and-filter"}>
-                    <div id="search-bar">
-                        <input type="text" placeholder="Search..." />
-                        <button>Search</button>
-                    </div>
+            <MapPanAndZoomController ref={controllerRef}/>
 
-                    <div id="nav">
-                        <button onClick={findAll}>All</button>
-                        <button onClick={findMuseums}>Museums</button>
-                        <button onClick={findArchaeologicalSites}>Archaeological Sites</button>
-                        <button onClick={findMonasteries}>Monasteries</button>
-                    </div>
+            <div id={"top-bar"}>
+                <div id="search-bar">
+                    <SearchComponent updateMarkers={updateMapViaSearch}
+                                     focusTarget={focusTarget}
+                                     focusMap={focusMap}
+                                     initialCenter={initialCenter}/>
                 </div>
 
-                {/*<div id="profile-icon" onClick={navigateProfile}>*/}
-                {/*    <img src="/images/user.png" alt="Favorites Image"/>*/}
-                {/*</div>*/}
+
+                <div id="nav">
+                    <NavComponent updateMarkers={updateMapViaNavButtons}/>
+                </div>
 
                 <Dropdown id="profile-icon">
                     <Dropdown.Toggle variant="success" id="dropdown-basic">
@@ -93,7 +92,6 @@ const Home = () => {
                 {state.map(obj =>
                     <Marker key={obj.id} position={[obj.lat, obj.lon]} icon={customIcon}>
                         <Popup>
-                            {/*<h2>{obj.name}</h2>*/}
                             <div className="card">
                                 <h2 className="cardTitle">{obj.name}</h2>
                                 <section className="cardFt">
