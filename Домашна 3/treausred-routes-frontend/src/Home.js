@@ -9,6 +9,8 @@ import './Search.css';
 import MapPanAndZoomController from "./MapPanAndZoomController";
 import NavComponent from "./NavComponent";
 import SearchComponent from "./SearchComponent";
+import ProfileDropdown from "./ProfileDropdown"; // Import the ProfileDropdown component
+
 
 
 
@@ -130,17 +132,8 @@ const Home = () => {
                     <NavComponent updateMarkers={updateMapViaNavButtons} />
                 </div>
 
-                <Dropdown id="profile-icon">
-                    <Dropdown.Toggle variant="success" id="dropdown-basic">
-                        <img src="/images/user.png" alt="Profile Image" />
-                    </Dropdown.Toggle>
+                <ProfileDropdown /> {/* Use the ProfileDropdown component */}
 
-                    <Dropdown.Menu id="dropdown-menu">
-                        <Dropdown.Item href="/favorites">Favorites</Dropdown.Item>
-                        <Dropdown.Item href="/profile">Account</Dropdown.Item>
-                        <Dropdown.Item href="/login">Log out</Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
             </div>
 
             <MarkerClusterGroup chunkedLoading>
