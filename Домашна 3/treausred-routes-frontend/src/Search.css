@@ -8,6 +8,7 @@
     z-index: 1000; /* Ensure the search bar is rendered above the map */
     align-items: center;
     flex: 50%;
+    width: 500px;
 }
 
 input {
