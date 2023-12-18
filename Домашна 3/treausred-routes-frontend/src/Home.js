@@ -29,6 +29,9 @@ const Home = () => {
     const [favoritedStates, setFavoritedStates] = useState([]);
     const [favorites, setFavorites] = useState([]);
 
+    const [userRatings, setUserRatings] = useState({});
+    const [averageRatings, setAverageRatings] = useState({});
+
 
     const fetchFavorites = () => {
         fetch('http://localhost:8080/favorites/all', {
@@ -67,6 +70,58 @@ const Home = () => {
             }
         });
     }, [favorites, state]);
+
+
+    useEffect(() => {
+        const fetchUserRatings = async () => {
+            try {
+                const objects = state.map(obj => obj.id);
+                const userRatingsData = await Promise.all(
+                    objects.map(async objectId => {
+                        const userRatingData = await fetch(`http://localhost:8080/reviews/userRating/${objectId}`);
+                        const userRating = await userRatingData.json();
+                        return { objectId, userRating };
+                    })
+                );
+
+                const userRatingsMap = {};
+                userRatingsData.forEach(item => {
+                    userRatingsMap[item.objectId] = item.userRating;
+                });
+
+                setUserRatings(userRatingsMap);
+            } catch (error) {
+                console.error('Error fetching user ratings:', error);
+            }
+        };
+
+        const fetchAverageRatings = async () => {
+            try {
+                const objects = state.map(obj => obj.id);
+                const averageRatingsData = await Promise.all(
+                    objects.map(async objectId => {
+                        const avgRatingData = await fetch(`http://localhost:8080/reviews/rating/${objectId}`);
+                        const avgRating = await avgRatingData.json();
+                        return { objectId, avgRating };
+                    })
+                );
+
+                const averageRatingsMap = {};
+                averageRatingsData.forEach(item => {
+                    averageRatingsMap[item.objectId] = item.avgRating;
+                });
+
+                setAverageRatings(averageRatingsMap);
+            } catch (error) {
+                console.error('Error fetching average ratings:', error);
+            }
+        };
+
+        // Fetch user ratings and average ratings
+        fetchUserRatings();
+        fetchAverageRatings();
+    }, [state]); // Fetch ratings whenever the state changes
+
 
     const updateMapViaNavButtons = (selectedFilter) => {
         setUrl(selectedFilter);
@@ -111,6 +166,39 @@ const Home = () => {
         }
     };
 
+    const handleStarClick = async (objectId, rating) => {
+        try {
+            const response = await fetch(`http://localhost:8080/reviews/${objectId}/${rating}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                // Update user ratings
+                setUserRatings(prevRatings => ({
+                    ...prevRatings,
+                    [objectId]: rating,
+                }));
+
+                // Fetch and update average ratings
+                const avgRatingResponse = await fetch(`http://localhost:8080/reviews/rating/${objectId}`);
+                const avgRating = await avgRatingResponse.json();
+
+                setAverageRatings(prevAvgRatings => ({
+                    ...prevAvgRatings,
+                    [objectId]: avgRating,
+                }));
+            } else {
+                console.error('Failed to add review');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+
     return (
         <MapContainer center={initialCenter} zoom={initialZoom} zoomControl={false}>
             <TileLayer
@@ -137,7 +225,7 @@ const Home = () => {
             </div>
 
             <MarkerClusterGroup chunkedLoading>
-                {state.map((obj, index) =>
+                {state.map((obj, index) => (
                     <Marker key={obj.id} position={[obj.lat, obj.lon]} icon={customIcon}>
                         <Popup>
                             <div className="card">
@@ -147,13 +235,25 @@ const Home = () => {
                                         {favoritedStates[index] ? '️🤍' : '♡'}
                                     </button>
                                     <div className="rating">
-                                        &#9733; &#9733; &#9733; &#9733; &#9734;
+                                        {[1, 2, 3, 4, 5].map((starId) => (
+                                            <span
+                                                key={starId}
+                                                className={userRatings[obj.id] >= starId ? 'filledStar' : 'emptyStar'}
+                                                onClick={() => handleStarClick(obj.id, starId)}
+                                            >
+                                                &#9733;
+                                            </span>
+                                        ))}
+                                        <span className="averageRating">
+                                            Average:
+                                            {averageRatings[obj.id] && ` ${averageRatings[obj.id].toFixed(1)}`}
+                                         </span>
                                     </div>
                                 </section>
                             </div>
                         </Popup>
                     </Marker>
-                )}
+                ))}
             </MarkerClusterGroup>
 
             <ZoomControl position="bottomright" />

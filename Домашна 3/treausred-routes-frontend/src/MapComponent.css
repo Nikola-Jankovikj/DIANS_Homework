@@ -137,3 +137,23 @@
 .leaflet-popup-content-wrapper {
     width: 340px;
 }
+
+.rating {
+    display: flex;
+    align-items: center;
+}
+
+.emptyStar {
+    color: whitesmoke; /* Color for empty star */
+    cursor: pointer;
+}
+
+.filledStar {
+    color: black; /* Color for filled star */
+    cursor: pointer;
+}
+
+.averageRating {
+    margin-left: 10px;
+    font-size: 14px;
+}

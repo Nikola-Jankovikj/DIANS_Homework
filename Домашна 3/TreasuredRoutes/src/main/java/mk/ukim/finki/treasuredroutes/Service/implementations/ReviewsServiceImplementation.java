@@ -10,6 +10,7 @@ import mk.ukim.finki.treasuredroutes.Service.ReviewsService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReviewsServiceImplementation implements ReviewsService {
@@ -30,6 +31,10 @@ public class ReviewsServiceImplementation implements ReviewsService {
         User user = userRepository.findById(userId).orElse(null);
         Element element = elementRepository.findById(elementId).orElse(null);
         Review review = new Review(user, element, rating);
+        if (reviewsRepository.findByUserAndElement(user, element) != null) {
+            review = reviewsRepository.findByUserAndElement(user, element);
+            review.setRating(rating);
+        }
         reviewsRepository.save(review);
     }
 
@@ -55,5 +60,12 @@ public class ReviewsServiceImplementation implements ReviewsService {
                 .mapToDouble(Review::getRating)
                 .average()
                 .orElse(0);
+    }
+
+    @Override
+    public int getRatingByUserAndElement(Long userId, Long elementId) {
+        User user = userRepository.findById(userId).orElse(null);
+        Element element = elementRepository.findById(elementId).orElse(null);
+        return reviewsRepository.findByUserAndElement(user, element).getRating();
     }
 }
