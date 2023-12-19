@@ -231,17 +231,16 @@ const Home = () => {
                             <div className="card">
                                 <h2 className="cardTitle">{obj.name}</h2>
                                 <section className="cardFt">
-                                    <button className="heartButton" onClick={() => handleToggleFavorite(obj.id, index)}>
-                                        {favoritedStates[index] ? '️🤍' : '♡'}
+                                    <button id="heart" className="heartButton" onClick={() => handleToggleFavorite(obj.id, index)}>
+                                        {favoritedStates[index] ? '🤍️' : '♡'}
                                     </button>
                                     <div className="rating">
                                         {[1, 2, 3, 4, 5].map((starId) => (
-                                            <span
+                                            <span id="stars"
                                                 key={starId}
-                                                className={userRatings[obj.id] >= starId ? 'filledStar' : 'emptyStar'}
                                                 onClick={() => handleStarClick(obj.id, starId)}
                                             >
-                                                &#9733;
+                                                {userRatings[obj.id] >= starId ? '★' : '☆'}
                                             </span>
                                         ))}
                                         <span className="averageRating">

@@ -102,11 +102,11 @@ const Favorites = () => {
                             <h2 className="cardTitle">{favorite.name}</h2>
                             <section className="cardFt">
                                 <button className="heartButton" onClick={() => removeFromFavorites(favorite.id)}>
-                                    Remove
+                                    DEL
                                 </button>
                                 <div className="rating">
                                     {[1, 2, 3, 4, 5].map((id) => (
-                                        <span
+                                        <span id="stars"
                                             key={id}
                                             onClick={() => handleRatingClick(favorite.id, id)}
                                         >

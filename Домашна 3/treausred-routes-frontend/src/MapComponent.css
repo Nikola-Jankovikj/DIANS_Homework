@@ -33,7 +33,7 @@
 
 #nav button {
     flex: 1;
-    height: 40px;
+    height: 45px;
     margin: 0 5px;
 }
 
@@ -103,8 +103,8 @@
     height: 100px;
     max-width: 100%;
     border-radius: 50%;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-    border: 2px solid #3498db;
+    box-shadow: 0 0 5px rgba(0, 82, 4, 0.5);
+    border: 2px solid rgba(0, 68, 4, 0.5);
 }
 
 #dropdown-basic img {
@@ -141,19 +141,28 @@
 .rating {
     display: flex;
     align-items: center;
+    font-weight: bold;
+    font-size: 16px;
+
 }
 
-.emptyStar {
-    color: whitesmoke; /* Color for empty star */
+#stars {
+    display: inline-block;
+}
+
+#stars:hover {
+    background: rgba(0, 68, 4, 0.5);
+    border-radius: 5px;
     cursor: pointer;
 }
 
-.filledStar {
-    color: black; /* Color for filled star */
-    cursor: pointer;
-}
 
 .averageRating {
     margin-left: 10px;
     font-size: 14px;
+}
+
+#heart{
+    font-size: 22px;
+    font-weight: bold;
 }
