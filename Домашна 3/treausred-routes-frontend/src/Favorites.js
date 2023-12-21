@@ -11,18 +11,36 @@ const Favorites = () => {
         fetchFavorites();
     }, []);
 
-    const fetchFavorites = () => {
-        // Fetch user's favorites from the server
-        fetch('http://localhost:8080/favorites/all', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            // Include any necessary authentication tokens or headers
-        })
-            .then(response => response.json())
-            .then(data => setFavorites(data))
-            .catch(error => console.error('Error fetching favorites:', error));
+    const fetchFavorites = async () => {
+        try {
+            // Fetch user's favorites from the server
+            const response = await fetch('http://localhost:8080/favorites/all', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // Include any necessary authentication tokens or headers
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+
+                // Fetch ratings for each favorite item
+                const favoritesWithRatingsPromises = data.map(async (favorite) => {
+                    const ratingResponse = await fetch(`http://localhost:8080/reviews/rating/${favorite.id}`);
+                    const ratingData = await ratingResponse.json();
+                    return { ...favorite, rating: ratingData };
+                });
+
+                const favoritesWithRatings = await Promise.all(favoritesWithRatingsPromises);
+
+                setFavorites(favoritesWithRatings);
+            } else {
+                console.error('Failed to fetch favorites:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error fetching favorites:', error);
+        }
     };
 
     const removeFromFavorites = (objectId) => {
@@ -50,6 +68,27 @@ const Favorites = () => {
         navigate("/home");
     };
 
+    const handleRatingClick = async (objectId, ratingId) => {
+        try {
+            // Send the rating to the backend
+            const response = await fetch(`http://localhost:8080/reviews/${objectId}/${ratingId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                // If the rating submission was successful, fetch updated ratings
+                fetchFavorites();
+            } else {
+                console.error('Failed to submit rating');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
     return (
         <div className="favorites-container">
             <div className="favorites-header">
@@ -63,11 +102,19 @@ const Favorites = () => {
                             <h2 className="cardTitle">{favorite.name}</h2>
                             <section className="cardFt">
                                 <button className="heartButton" onClick={() => removeFromFavorites(favorite.id)}>
-                                    Remove
+                                    DEL
                                 </button>
                                 <div className="rating">
-                                    &#9733; &#9733; &#9733; &#9733; &#9734;
+                                    {[1, 2, 3, 4, 5].map((id) => (
+                                        <span id="stars"
+                                            key={id}
+                                            onClick={() => handleRatingClick(favorite.id, id)}
+                                        >
+                                            {id <= favorite.rating ? '★' : '☆'}
+                                        </span>
+                                    ))}
                                 </div>
+                                <span>Average: {favorite.rating}</span>
                             </section>
                         </div>
                     ))}

@@ -1,5 +1,5 @@
 .favorites-header {
-    background-color: #3498db;
+    background-color: rgba(0, 82, 4, 0.5);
     color: #fff;
     padding: 10px;
     display: flex;
@@ -13,7 +13,7 @@
 }
 
 .back-button {
-    background-color: #2980b9;
+    background-color: rgba(0, 82, 4, 0.5);
     color: #fff;
     border: none;
     padding: 5px 10px;
@@ -28,25 +28,31 @@
 .favRow {
     display: flex;
     justify-content: space-evenly;
+
+    flex-wrap: wrap;
 }
 
 .card {
-    background: #f3f7ff;
     width: 300px;
     height: 260px;
-    box-shadow: 0 0 5px rgba(0, 100, 100, 0.5);
+    box-shadow: 0 0 10px rgba(0, 68, 4, 0.5);
     border-radius: 5px;
     margin: 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    flex-basis: calc(25% - 40px); /* Adjust as needed based on margin and desired spacing */
+    box-sizing: border-box;
+    background-image: url('resources/map.webp');
+    background-size: cover; /* Ensure the image covers the entire element */
+    background-position: center;
 }
 
 .card .cardFt {
     width: 100%;
     height: 50px;
     padding: 10px;
-    background: lightblue;
+    background: darkseagreen;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     display: flex;
@@ -56,6 +62,11 @@
 
 .cardTitle {
     padding: 10px;
+    color: white;
+    font-weight: bold;
+    font-style: italic;
+    font-family: "Courier New", serif;
+    text-shadow: 5px 5px 5px rgba(0, 68, 4, 0.5);
 }
 
 .favorite {
@@ -64,7 +75,19 @@
 }
 
 .heartButton {
-    background: slategray;
-    box-shadow: 0 0 5px rgba(0, 100, 100, 0.5);
+    background: #6f8191;
+    box-shadow: 0 0 5px rgba(0, 82, 4, 0.5);
     border-radius: 5px;
+    width: 60px;
+    font-family: "Courier New", serif;
+    font-size: 16px;
+    font-weight: bold;
 }
+
+
+.heartButton:hover {
+    background: dimgray;
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
+}
+
