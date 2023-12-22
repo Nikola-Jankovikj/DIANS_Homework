@@ -10,6 +10,7 @@ import MapPanAndZoomController from "./MapPanAndZoomController";
 import NavComponent from "./NavComponent";
 import SearchComponent from "./SearchComponent";
 import ProfileDropdown from "./ProfileDropdown";
+import RoutePlannerSidebar from './RoutePlannerSidebar';
 import Routing from "./Routing"; // Import the ProfileDropdown component
 import "./styles.css";
 import "leaflet/dist/leaflet.css";
@@ -20,6 +21,35 @@ const Home = () => {
         iconUrl: require('./resources/location-pin.png'),
         iconSize: [38, 38]
     });
+
+    const routePlannerSidebarRef = useRef();
+
+    const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const [routeSites, setRouteSites] = useState([]);
+    const openSidebar = () => {
+        console.log('Button clicked. Opening sidebar...');
+
+        setSidebarOpen(true);
+    };
+
+    const handleAddToRoute = (locationName) => {
+        // Logic to add location to the route in the Home component
+        console.log(`Adding ${locationName} to the route in Home component`);
+        setRouteSites((prevSites) => [...prevSites, locationName]);
+    };
+
+    const handleRemoveFromRoute = (index) => {
+        setRouteSites((prevSites) => prevSites.filter((_, i) => i !== index));
+    };
+
+
+    const closeSidebar = () => {
+        console.log('Button clicked. Closing sidebar...');
+
+        setSidebarOpen(false);
+    };
+
+
 
     const controllerRef = useRef();
     const initialCenter = [41.6090, 21.7453];
@@ -73,7 +103,7 @@ const Home = () => {
     }, [favorites, state]);
 
 
-    useEffect(() => {
+    const [selectedLocations, setSelectedLocations] = useState([]);    useEffect(() => {
         const fetchUserRatings = async () => {
             try {
                 const objects = state.map(obj => obj.id);
@@ -141,7 +171,11 @@ const Home = () => {
         controllerRef.current.focusMap(coordinates);
     };
 
-    const handleToggleFavorite = async (objectId) => {
+    const addToRoute = (locationName) => {
+        setSelectedLocations((prevSelectedLocations) => [...prevSelectedLocations, locationName]);
+    };
+
+    const handleToggleFavorite = async (objectId, locationName) => {
         try {
             const isCurrentlyFavorited = favoritedStates[state.findIndex(obj => obj.id === objectId)];
             const response = await fetch('http://localhost:8080/favorites', {
@@ -159,6 +193,9 @@ const Home = () => {
                     newStates[index] = !newStates[index];
                     return newStates;
                 });
+
+
+
             } else {
                 console.error('Failed to toggle favorites');
             }
@@ -207,6 +244,8 @@ const Home = () => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
 
+
+
             <MapPanAndZoomController ref={controllerRef} />
 
             <div id={"top-bar"}>
@@ -221,9 +260,30 @@ const Home = () => {
                     <NavComponent updateMarkers={updateMapViaNavButtons} />
                 </div>
 
+
                 <ProfileDropdown /> {/* Use the ProfileDropdown component */}
 
+
             </div>
+
+            <div id="plan-route-button">
+                <button onClick={openSidebar}>Plan a Route</button>
+                {isSidebarOpen && (
+                    <RoutePlannerSidebar
+                        onClose={closeSidebar}
+                        addToRoute={handleAddToRoute}
+                        routeSites={routeSites}
+                        removeFromRoute={handleRemoveFromRoute}
+                    />
+                )}
+            </div>
+
+
+
+
+
+
+
 
             <MarkerClusterGroup chunkedLoading>
                 {state.map((obj, index) => (
@@ -232,23 +292,31 @@ const Home = () => {
                             <div className="card">
                                 <h2 className="cardTitle">{obj.name}</h2>
                                 <section className="cardFt">
-                                    <button id="heart" className="heartButton" onClick={() => handleToggleFavorite(obj.id, index)}>
+                                    <button
+                                        id="heart"
+                                        className="heartButton"
+                                        onClick={() => handleToggleFavorite(obj.id, index)}
+                                    >
                                         {favoritedStates[index] ? '🤍️' : '♡'}
                                     </button>
                                     <div className="rating">
                                         {[1, 2, 3, 4, 5].map((starId) => (
-                                            <span id="stars"
+                                            <span
+                                                id="stars"
                                                 key={starId}
                                                 onClick={() => handleStarClick(obj.id, starId)}
                                             >
-                                                {userRatings[obj.id] >= starId ? '★' : '☆'}
-                                            </span>
+                        {userRatings[obj.id] >= starId ? '★' : '☆'}
+                    </span>
                                         ))}
                                         <span className="averageRating">
-                                            Average:
+                    Average:
                                             {averageRatings[obj.id] && ` ${averageRatings[obj.id].toFixed(1)}`}
-                                         </span>
+                </span>
                                     </div>
+                                    <button onClick={() => handleAddToRoute(obj)}>
+                                        + Add to Route
+                                    </button>
                                 </section>
                             </div>
                         </Popup>
@@ -256,11 +324,14 @@ const Home = () => {
                 ))}
             </MarkerClusterGroup>
 
-            <Routing />
+
 
 
             <ZoomControl position="bottomright" />
+
         </MapContainer>
+
+
     );
 };
 

@@ -1,7 +1,9 @@
 package mk.ukim.finki.treasuredroutes.Service.implementations;
 
 import mk.ukim.finki.treasuredroutes.Model.Element;
+import mk.ukim.finki.treasuredroutes.Model.User;
 import mk.ukim.finki.treasuredroutes.Repository.ElementRepository;
+import mk.ukim.finki.treasuredroutes.Repository.UserRepository;
 import mk.ukim.finki.treasuredroutes.Service.DataLoaderService;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +15,18 @@ import java.io.IOException;
 public class DataLoaderServiceImplementation implements DataLoaderService{
 
     private final ElementRepository elementRepository;
+    private final UserRepository userRepository;
 
-    public DataLoaderServiceImplementation(ElementRepository elementRepository) {
+    public DataLoaderServiceImplementation(ElementRepository elementRepository, UserRepository userRepository) {
         this.elementRepository = elementRepository;
+        this.userRepository = userRepository;
     }
 
     public void loadDataFromCSV(String csvFilePath) {
+        User user = new User("123", "123");
+        userRepository.save(user);
+        user = new User("123", "123");
+        userRepository.save(user);
         try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
             String line;
             while ((line = br.readLine()) != null) {
