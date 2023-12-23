@@ -31,50 +31,42 @@ public class RouteController {
         this.elementService = elementService;
     }
 
-    @GetMapping("/add")
-    public String addRoute() throws UserNotFoundException {
-        routeService.generateRoute(userService.findById(1L), elementService.findByStringId("4430657931"));
-        routeService.generateRoute(userService.findById(1L), elementService.findByStringId("2480929515"));
-        routeService.generateRoute(userService.findById(1L), elementService.findByStringId("7512268453"));
-        routeService.generateRoute(userService.findById(2L), elementService.findByStringId("2480929515"));
-        routeService.generateRoute(userService.findById(2L), elementService.findByStringId("7512268453"));
-        return null;
-    }
 
-    @PostMapping("/add2")
-    public ResponseEntity<String> addRoute(@RequestBody Map<String, String> requestBody) {
-        try {
-            String siteId = requestBody.get("siteId");
-            System.out.println(siteId);
-            System.out.println(elementService.findByStringId(siteId));
-            routeService.generateRoute(userService.findById(1L), elementService.findByStringId(siteId));
-            return ResponseEntity.ok("Site added to the route successfully.");
-        } catch (Exception e) {
-            System.out.println("problem imame");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add site to the route.");
-        }
-    }
 
     @GetMapping("/all")
     @ResponseBody
-    public List<Element> getRoutes() throws UserNotFoundException {
-        System.out.println("Ej23");
+    public List<Element> getRoute() throws UserNotFoundException {
+
         User user = userService.findById(1L); // Change the user ID as needed
-        System.out.println("Returns: " + routeService.getRouteByUser(user));
-        return routeService.getRouteByUser(user);
+        return routeService.getSortedSitesToVisit(user);
     }
 
     @DeleteMapping("/delete/{siteId}")
     public ResponseEntity<String> deleteSiteFromRoute(@PathVariable String siteId) {
 
         try {
-            System.out.println("Ej");
+            User user = userService.findById(1L);
             routeService.deleteSite(userService.findById(1L), siteId);
+
             return ResponseEntity.ok("Site deleted from the route successfully");
         } catch (Exception e) {
             // Handle exceptions, log errors, and return an error response
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Failed to delete site from the route");
+        }
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<String> addSiteToRoute(@RequestBody Map<String, String> requestBody) {
+        try {
+            String siteId = requestBody.get("siteId");
+            System.out.println(siteId);
+            System.out.println(elementService.findByStringId(siteId));
+            routeService.generateRouteTSP(userService.findById(1L), elementService.findByStringId(siteId));
+            return ResponseEntity.ok("Site added to the route successfully.");
+        } catch (Exception e) {
+            System.out.println("problem imame");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add site to the route.");
         }
     }
 

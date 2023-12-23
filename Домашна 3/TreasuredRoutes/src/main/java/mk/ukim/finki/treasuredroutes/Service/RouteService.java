@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface RouteService {
     Route getByUser(User user);
-    List<Element> generateRoute(User user, Element newSIte);
     Route createRouteForUser(User user);
 
-    List<Element> getRouteByUser(User user);
+    List<Element> getSortedSitesToVisit(User user);
 
     void deleteSite(User user, String siteId);
+    List<Element> generateRouteTSP(User user, Element newSite);
 
 }

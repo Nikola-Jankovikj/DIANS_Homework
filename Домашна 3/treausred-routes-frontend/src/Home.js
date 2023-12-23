@@ -35,7 +35,7 @@ const Home = () => {
     const handleAddToRoute = async (site) => {
         try {
             // Send a POST request to the backend to add the site to the route
-            const response = await fetch('http://localhost:8080/route/add2', {
+            const response = await fetch('http://localhost:8080/route/add', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

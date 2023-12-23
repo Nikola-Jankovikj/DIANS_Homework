@@ -17,16 +17,10 @@ public class RouteServiceImplementation implements RouteService {
 
     private final RouteRepository routeRepository;
     private final ElementRepository elementRepository;
-    private final LastAddedSiteService lastAddedSiteService;
-    private final ElementService elementService;
 
     public RouteServiceImplementation(RouteRepository routeRepository, ElementRepository elementRepository, LastAddedSiteService lastAddedSiteService, ElementService elementService) {
         this.routeRepository = routeRepository;
         this.elementRepository = elementRepository;
-
-
-        this.lastAddedSiteService = lastAddedSiteService;
-        this.elementService = elementService;
     }
 
     @Override
@@ -34,70 +28,6 @@ public class RouteServiceImplementation implements RouteService {
         if(routeRepository.findRouteByUserOfRoute(user) == null) createRouteForUser(user);
         return routeRepository.findRouteByUserOfRoute(user);
     }
-
-    @Override
-    public List<Element> generateRoute(User user, Element newSite) {
-        Route routeElement = getByUser(user);
-        List<Element> route = new ArrayList<>();
-        route.add(routeElement.getStartingLocation());
-        if(routeElement.getRouteSites()!=null)
-            route.addAll(routeElement.getRouteSites());
-
-//        if (routeElement.getRouteSites() != null) {
-//            route = new ArrayList<>(routeElement.getRouteSites());
-//        } else {
-//            route = new ArrayList<>();
-//        }
-
-        List<Element> routeForDatabase = new ArrayList<>(route);
-
-        if (newSite != null && !route.contains(newSite)) {
-            // Find the closest neighbor for the new site
-            Element closestNeighbor = findClosestNeighbor(routeElement.getStartingLocation(), route, newSite);
-
-            // Insert the new site after the closest neighbor
-            if (closestNeighbor != null) {
-                route.add(route.indexOf(closestNeighbor) + 1, newSite);
-                lastAddedSiteService.setLastAddedSite(user.getId(), newSite);
-            } else {
-                // If no closest neighbor found, insert at the beginning
-                route.add(0, newSite);
-                lastAddedSiteService.setLastAddedSite(user.getId(), newSite);
-            }
-
-
-            routeForDatabase.add(newSite);
-        }
-
-
-
-
-        System.out.println("This sorted?? " + routeForDatabase);
-        if (routeElement.getRouteSites() != null) {
-            routeElement.getRouteSites().clear();
-        }
-
-        route.remove(routeElement.getStartingLocation());
-        routeElement.setRouteSites(route);
-        routeRepository.save(routeElement);
-
-        return route;
-    }
-    private Element findClosestNeighbor(Element startingLocation, List<Element> route, Element newSite) {
-        double minDistance = Double.MAX_VALUE;
-        Element closestNeighbor = null;
-
-        for (Element site : route) {
-            double distance = calculateDistance(newSite, site);
-            if (distance < minDistance) {
-                minDistance = distance;
-                closestNeighbor = site;
-            }
-        }
-
-        return closestNeighbor;
-    }
-
 
     public Route createRouteForUser(User user) {
         Route newRoute = new Route();
@@ -107,7 +37,7 @@ public class RouteServiceImplementation implements RouteService {
     }
 
     @Override
-    public List<Element> getRouteByUser(User user) {
+    public List<Element> getSortedSitesToVisit(User user) {
         Route route = getByUser(user);
         System.out.println(route);
         List<Element> routeSites = new ArrayList<>();
@@ -121,17 +51,85 @@ public class RouteServiceImplementation implements RouteService {
     public void deleteSite(User user, String siteId) {
         Route routeToEdit = getByUser(user);
         Element siteToRemove = elementRepository.getElementById(siteId);
-        if(routeToEdit.getStartingLocation().equals(siteToRemove)){
-            routeToEdit.setStartingLocation(routeToEdit.getRouteSites().stream().toList().get(0));
-            routeToEdit.getRouteSites().remove(routeToEdit.getRouteSites().stream().toList().get(0));
+        boolean removingStartingLocation = routeToEdit.getStartingLocation().equals(siteToRemove);
+
+        if(removingStartingLocation && routeToEdit.getRouteSites().isEmpty()){
+            routeToEdit.setStartingLocation(null);
+        }
+        else if(removingStartingLocation){
+            System.out.println("tuka!");
+            Element newStartingLocation = routeToEdit.getRouteSites().stream().toList().get(0);
+            System.out.println(newStartingLocation);
+            routeToEdit.setStartingLocation(newStartingLocation);
+            routeToEdit.getRouteSites().remove(newStartingLocation);
         }
         else{
             routeToEdit.getRouteSites().remove(siteToRemove);
         }
+
+        generateRouteTSP(user, null);
         routeRepository.save(routeToEdit);
 
     }
 
+    @Override
+    public List<Element> generateRouteTSP(User user, Element newSite) {
+        Route routeElement = getByUser(user);
+        if(routeElement.getStartingLocation() == null){
+            routeElement.setStartingLocation(newSite);
+            routeRepository.save(routeElement);
+        }
+        List<Element> unvisitedSites = new ArrayList<>(routeElement.getRouteSites());
+
+        if (newSite != null && !unvisitedSites.contains(newSite) && newSite != routeElement.getStartingLocation()) {
+            unvisitedSites.add(newSite);
+        }
+
+        TSPAlgorithm tspAlgorithm = new TSPAlgorithm();
+        List<Element> sortedRoute = tspAlgorithm.solveTSP(routeElement, unvisitedSites);
+        System.out.println("TSP " + sortedRoute);
+
+
+        routeElement.setRouteSites(sortedRoute.subList(1, sortedRoute.size()));
+        routeRepository.save(routeElement);
+
+        return sortedRoute;
+    }
+
+    public class TSPAlgorithm {
+
+        public List<Element> solveTSP(Route routeElement, List<Element> unvisitedSites) {
+
+            List<Element> route = new ArrayList<>();
+            route.add(routeElement.getStartingLocation());
+
+
+            while (!unvisitedSites.isEmpty()) {
+                Element currentLocation = route.get(route.size() - 1);
+                Element nextLocation = findClosestNeighborTSP(currentLocation, unvisitedSites);
+
+                route.add(nextLocation);
+
+                unvisitedSites.remove(nextLocation);
+            }
+
+            return route;
+        }
+
+        private Element findClosestNeighborTSP(Element currentLocation, List<Element> unvisitedSites){
+            double minDistance = Double.MAX_VALUE;
+            Element closestNeighbor = null;
+
+            for (Element site : unvisitedSites) {
+                double distance = calculateDistance(currentLocation, site);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestNeighbor = site;
+                }
+            }
+            return closestNeighbor;
+        }
+    }
 
     private double calculateDistance(Element location1, Element location2) {
 
@@ -149,10 +147,8 @@ public class RouteServiceImplementation implements RouteService {
 
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-        // Radius of the Earth (in kilometers)
         double earthRadius = 6371.0;
 
-        // Calculate the distance
         return earthRadius * c;
     }
 
