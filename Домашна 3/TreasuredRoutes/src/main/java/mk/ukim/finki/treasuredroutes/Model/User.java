@@ -12,15 +12,18 @@ import lombok.NoArgsConstructor;
 @Entity(name = "MAP_USER")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String email;
 
     private String password;
 
-    public User(String email, String password) {
+    private String profilePicture;
+
+    public User(Long id, String email, String password, String profilePicture) {
+        this.id = id;
         this.email = email;
         this.password = password;
+        this.profilePicture = profilePicture;
     }
 }

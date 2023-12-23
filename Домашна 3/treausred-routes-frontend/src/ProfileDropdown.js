@@ -1,5 +1,5 @@
 // ProfileDropdown.js
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './MapComponent.css';
 const ProfileDropdown = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -8,11 +8,42 @@ const ProfileDropdown = () => {
         setIsOpen(!isOpen);
     };
 
+    const [profilePicture, setProfilePicture] = useState("");
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const response = await fetch("http://localhost:8080/user/profile", {
+                    method: "GET",
+                    headers: {
+                    },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setProfilePicture(data["profile-picture"]);
+                } else {
+                    console.error("Error fetching user email");
+                }
+            } catch (error) {
+                console.error("Error fetching user email", error);
+            }
+        };
+
+        fetchUserData();
+    }, []);
+
     return (
         <div id="profile-icon">
             <div id="dropdown-basic">
-                <img src="/images/user.png" alt="Profile Image" onClick={toggleDropdown} />
+                {profilePicture ? (
+                    <img src={profilePicture} alt="Profile Image" onClick={toggleDropdown}/>
+                ) : (
+                    <img src="/images/user.png" alt="Default Profile Image" onClick={toggleDropdown}/>
+                )}
+                <div id="profile-icon-acc">
 
+                </div>
             </div>
 
             {isOpen && (
