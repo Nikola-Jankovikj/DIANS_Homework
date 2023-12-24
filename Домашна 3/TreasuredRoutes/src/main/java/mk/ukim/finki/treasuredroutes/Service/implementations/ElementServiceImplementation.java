@@ -31,6 +31,11 @@ public class ElementServiceImplementation implements ElementService {
     }
 
     @Override
+    public Element findByStringId(String id) {
+        return elementRepository.getElementById(id);
+    }
+
+    @Override
     public List<Element> findMuseums() {
         return elementRepository.findAll().stream().filter(element -> element.getType().strip().equalsIgnoreCase("музеј")).collect(Collectors.toList());
     }

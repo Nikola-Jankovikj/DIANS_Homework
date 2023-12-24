@@ -166,3 +166,30 @@
     font-size: 22px;
     font-weight: bold;
 }
+
+#plan-route-button {
+    position: relative;
+    top: 10px;
+    left: 10px;
+    z-index: 500;
+
+}
+
+.addToRouteButton {
+    background-color: #2ecc71;
+    border: none;
+    color: white;
+    padding: 8px 14px; /* Adjusted padding */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px; /* Adjusted font size */
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.addToRouteButton:hover {
+    background-color: #27ae60;
+}
