@@ -39,10 +39,11 @@ const Home = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: "include", // Include cookies in the reques
         })
             .then(response => response.json())
             .then(data => setFavorites(data))
-            .catch(error => console.error('Error fetching favorites:', error));
+            .catch(error => console.log("error"));
     };
 
     useEffect(() => {
@@ -148,6 +149,7 @@ const Home = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: "include", // Include cookies in the request
                 body: JSON.stringify({ objectId }),
             });
 
@@ -173,6 +175,7 @@ const Home = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: "include", // Include cookies in the request
             });
 
             if (response.ok) {

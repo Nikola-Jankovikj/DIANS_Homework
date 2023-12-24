@@ -1,5 +1,6 @@
 package mk.ukim.finki.treasuredroutes.Web;
 
+import jakarta.servlet.http.HttpServletRequest;
 import mk.ukim.finki.treasuredroutes.Model.Element;
 import mk.ukim.finki.treasuredroutes.Model.User;
 import mk.ukim.finki.treasuredroutes.Service.FavoritesService;
@@ -23,22 +24,28 @@ public class FavoritesController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Element>> getUserFavorites() {
-        List<Element> userFavorites = favoritesService.getUserFavorites(1L);
+    public ResponseEntity<List<Element>> getUserFavorites(HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+        System.out.println("SESSIONID:" + request.getSession().getId());
+        List<Element> userFavorites = favoritesService.getUserFavorites(user.getId());
         return ResponseEntity.ok(userFavorites);
     }
 
     @PutMapping()
-    public ResponseEntity<String> addToFavorites(@RequestBody Map<String, Long> requestBody) {
+    public ResponseEntity<String> addToFavorites(@RequestBody Map<String, Long> requestBody,
+                                                 HttpServletRequest request) {
         Long elementId = requestBody.get("objectId");
-        favoritesService.addToFavorites(1L, elementId);
+        User user = (User) request.getSession().getAttribute("user");
+        favoritesService.addToFavorites(user.getId(), elementId);
         return ResponseEntity.ok("Added to favorites");
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteFromFavorites(@RequestBody Map<String, Long> requestBody) {
+    public ResponseEntity<String> deleteFromFavorites(@RequestBody Map<String, Long> requestBody,
+                                                      HttpServletRequest request) {
         Long elementId = requestBody.get("objectId");
-        favoritesService.removeFromFavorites(1L, elementId);
+        User user = (User) request.getSession().getAttribute("user");
+        favoritesService.removeFromFavorites(user.getId(), elementId);
         return ResponseEntity.ok("Added to favorites");
     }
 }
