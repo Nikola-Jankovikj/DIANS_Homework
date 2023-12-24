@@ -1,7 +1,9 @@
 package mk.ukim.finki.treasuredroutes.Web;
 
+import jakarta.servlet.http.HttpServletRequest;
 import mk.ukim.finki.treasuredroutes.Model.Element;
 import mk.ukim.finki.treasuredroutes.Model.Review;
+import mk.ukim.finki.treasuredroutes.Model.User;
 import mk.ukim.finki.treasuredroutes.Service.ReviewsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -29,29 +31,34 @@ public class ReviewsController {
     }
 
     @GetMapping("/allUserReviews")
-    public ResponseEntity<List<Review>> getUserReviews() {
-        List<Review> reviews = reviewsService.getUserReviews(1L);
+    public ResponseEntity<List<Review>> getUserReviews(HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+        List<Review> reviews = reviewsService.getUserReviews(user.getId());
         return ResponseEntity.ok(reviews);
     }
 
     @GetMapping("/userRating/{elementId}")
-    public ResponseEntity<Integer> getRatingByUserAndElement(@PathVariable Long elementId) {
-        // You need to retrieve the user ID dynamically, for demonstration, I'm using a placeholder (1L)
-        Long userId = 1L;
-
-        Integer userRating = reviewsService.getRatingByUserAndElement(userId, elementId);
+    public ResponseEntity<Integer> getRatingByUserAndElement(@PathVariable Long elementId,
+                                                             HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+        Integer userRating = reviewsService.getRatingByUserAndElement(user.getId(), elementId);
         return ResponseEntity.ok(userRating);
     }
 
     @PutMapping("{elementId}/{rating}")
-    public ResponseEntity<String> addReview(@PathVariable Long elementId, @PathVariable int rating) {
-        reviewsService.addReview(1L, elementId, rating);
+    public ResponseEntity<String> addReview(@PathVariable Long elementId,
+                                            @PathVariable int rating,
+                                            HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+        reviewsService.addReview(user.getId(), elementId, rating);
         return ResponseEntity.ok("Added review");
     }
 
     @DeleteMapping("/{elementId}")
-    public ResponseEntity<String> deleteFromFavorites(@PathVariable Long elementId) {
-        reviewsService.removeReview(1L, elementId);
+    public ResponseEntity<String> deleteFromFavorites(@PathVariable Long elementId,
+                                                      HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+        reviewsService.removeReview(user.getId(), elementId);
         return ResponseEntity.ok("Removed review");
     }
 }
