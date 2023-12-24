@@ -27,7 +27,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    private static final String UPLOAD_FOLDER = "C:\\Users\\Laptop\\Desktop\\DIANS_Homework\\Domasna 3\\treausred-routes-frontend\\public\\images";
+    private static final String UPLOAD_FOLDER = "/Users/todor/Desktop/credentials/Домашна 3/treausred-routes-frontend/public/images";
 
     @PostMapping("/upload-profile-picture")
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {

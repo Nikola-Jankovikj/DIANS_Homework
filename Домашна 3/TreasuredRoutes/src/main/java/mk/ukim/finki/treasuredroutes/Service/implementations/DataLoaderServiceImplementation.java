@@ -23,10 +23,6 @@ public class DataLoaderServiceImplementation implements DataLoaderService{
     }
 
     public void loadDataFromCSV(String csvFilePath) {
-        User user = new User(1L, "email1", "password", "images/My Snapshot.jpg");
-        userRepository.save(user);
-        user = new User(2L, "email2", "password2", "C:\\Users\\Laptop\\Desktop\\DIANS_Homework\\Domasna 3\\TreasuredRoutes\\src\\main\\resources\\Images\\User\\My Snapshot.jpg");
-        userRepository.save(user);
         try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
             String line;
             while ((line = br.readLine()) != null) {

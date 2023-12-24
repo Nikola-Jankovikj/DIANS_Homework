@@ -156,9 +156,7 @@ const Profile = () => {
                 <div className={`row feedback ${isSuccess ? "success" : "error"}`}>
                     <p className={isSuccess ? "success" : "error"}>{feedbackMessage}</p>
                 </div>
-                <div className={`log-out ${isSuccess ? "success" : "error"}`}>
-                    <button>Log out</button>
-                </div>
+
             </section>
 
             {isModalOpen && (
