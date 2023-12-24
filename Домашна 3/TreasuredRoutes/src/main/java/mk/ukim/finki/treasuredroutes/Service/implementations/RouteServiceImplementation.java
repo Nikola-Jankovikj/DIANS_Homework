@@ -31,7 +31,6 @@ public class RouteServiceImplementation implements RouteService {
 
     public Route createRouteForUser(User user) {
         Route newRoute = new Route();
-        newRoute.setStartingLocation(elementRepository.getElementById("1831127085"));
         newRoute.setUserOfRoute(user);
         return routeRepository.save(newRoute);
     }

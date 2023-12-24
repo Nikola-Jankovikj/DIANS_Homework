@@ -23,10 +23,6 @@ public class DataLoaderServiceImplementation implements DataLoaderService{
     }
 
     public void loadDataFromCSV(String csvFilePath) {
-        User user = new User("123", "123");
-        userRepository.save(user);
-        user = new User("123", "123");
-        userRepository.save(user);
         try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
             String line;
             while ((line = br.readLine()) != null) {
