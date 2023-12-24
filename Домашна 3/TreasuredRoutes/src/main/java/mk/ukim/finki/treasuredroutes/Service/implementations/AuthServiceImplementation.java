@@ -24,8 +24,12 @@ public class AuthServiceImplementation implements AuthService {
             throw new InvalidArgumentsException();
         }
 
-        return userRepository.findByEmailAndPassword(email, password)
-                .orElseThrow(InvalidUserCredentialsException::new);
+        User user = userRepository.findByEmailAndPassword(email, password);
+        if (user==null) {
+            throw new InvalidUserCredentialsException();
+        }
+
+        return user;
     }
 
     @Override

@@ -45,12 +45,15 @@ public class SecurityConfig {
                 .formLogin((form) -> form
                         .loginPage("/login")
                         .permitAll()
-                        .failureUrl("/login?error=BadCredentials")
 //                        .defaultSuccessUrl("/", true)
                         .successHandler((request, response, authentication) -> {
                             // Handle successful login without redirection
                             response.setStatus(HttpServletResponse.SC_OK);
                         })
+                                .failureHandler(((request, response, exception) -> {
+                                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                                }))
+//                        .failureUrl("/login?error=BadCredentials")
                 )
                 .logout((logout) -> logout
                         .logoutUrl("/logout")

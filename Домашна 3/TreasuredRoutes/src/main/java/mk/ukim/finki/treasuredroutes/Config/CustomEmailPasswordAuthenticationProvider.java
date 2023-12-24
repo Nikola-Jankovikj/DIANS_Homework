@@ -22,7 +22,7 @@ public class CustomEmailPasswordAuthenticationProvider implements Authentication
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String email = authentication.getName();
+        String email = authentication.getPrincipal().toString();
         String password = authentication.getCredentials().toString();
 
         if (email.isEmpty() || password.isEmpty()) {
