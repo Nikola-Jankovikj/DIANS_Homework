@@ -6,6 +6,7 @@ import Login from "./Login";
 import Register from "./Register";
 import Favorites from "./Favorites";
 import Profile from "./Profile"
+import ChangePasswordForm from "./ChangePasswordForm";
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
                 <Route path="/register" Component={Register} />
                 <Route path="/profile" Component={Profile} />
                 <Route path="/favorites" Component={Favorites} />
+                <Route path="/change-password" Component={ChangePasswordForm} />
             </Routes>
         </Router>
     );
