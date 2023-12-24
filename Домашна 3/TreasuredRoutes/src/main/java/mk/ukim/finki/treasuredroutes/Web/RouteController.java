@@ -35,10 +35,17 @@ public class RouteController {
 
     @GetMapping("/all")
     @ResponseBody
-    public List<Element> getRoute() throws UserNotFoundException {
-
+    public ResponseEntity<List<Element>> getRoute() throws UserNotFoundException {
         User user = userService.findById(1L); // Change the user ID as needed
-        return routeService.getSortedSitesToVisit(user);
+        List<Element> routeSites = routeService.getSortedSitesToVisit(user);
+        System.out.println("LENGTH" + routeSites.size());
+
+        if (routeSites.get(0) == null) {
+            System.out.println("EMPTY ");
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(routeSites);
+        }
     }
 
     @DeleteMapping("/delete/{siteId}")

@@ -20,16 +20,21 @@
 }
 
 
-.site-list {
-    list-style: none;
-    padding: 0;
-}
-
 .site-list-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 12px;
+    border: 1px solid #ccc; /* Add a border around each site listing */
+    padding: 10px; /* Add padding to create space inside the box */
+    border-radius: 4px; /* Add rounded corners to the box */
+}
+
+/* Style for the first location (starting location) */
+.site-list-item:first-child {
+    background-color: #66bb6a; /* Change background color for the first location */
+    color: #fff; /* Text color for the first location */
+    font-weight: bold; /* Emphasize text for the first location */
 }
 
 .site-name {

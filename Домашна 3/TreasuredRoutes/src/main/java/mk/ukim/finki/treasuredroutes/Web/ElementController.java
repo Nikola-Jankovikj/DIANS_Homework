@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/api")
 @Validated
-@CrossOrigin(origins="http://localhost:3000")
+@CrossOrigin(origins="*")
 public class ElementController {
     private final ElementService elementService;
 

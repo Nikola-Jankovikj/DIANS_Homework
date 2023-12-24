@@ -1,11 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import './RoutePlannerSidebar.css';
-import Routing from "./Routing";
+import Routing from './Routing';
 
 const RoutePlannerSidebar = ({ onClose, removeFromRoute, updateRouteSites, handleAddToRoute }) => {
-
     const [routeSites, setRouteSites] = useState([]);
     const [isRoutingVisible, setIsRoutingVisible] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+
     const handleDeleteSite = async (siteId) => {
         try {
             const response = await fetch(`http://localhost:8080/route/delete/${siteId}`, {
@@ -33,48 +34,61 @@ const RoutePlannerSidebar = ({ onClose, removeFromRoute, updateRouteSites, handl
     useEffect(() => {
         const fetchRouteSites = async () => {
             try {
-                console.log("ej")
+                console.log('Fetching route sites...');
                 const response = await fetch('http://localhost:8080/route/all');
+
+                if (!response.ok) {
+                    // Handle non-successful response (e.g., 404 Not Found)
+                    throw new Error(`Failed to fetch route sites (HTTP ${response.status})`);
+                }
+
                 const data = await response.json();
                 setRouteSites(data);
+                setIsLoading(false);
             } catch (error) {
                 console.error('Error fetching route sites:', error);
+                setIsLoading(false);
+                // Handle the error state here (e.g., display an error message to the user)
             }
         };
 
+        // Fetch data when the component mounts
         fetchRouteSites();
     }, [updateRouteSites]);
-
     useEffect(() => {
         // Add any additional logic you want to execute when routeSites changes
         console.log('Route sites updated:', routeSites);
     }, [handleAddToRoute]);
 
-
-
-        // ...
-
-
     return (
         <div className="route-planner-sidebar">
             <h2>Your Route</h2>
+            <p className="route-instructions">
+                Welcome to Your Route Planner. Please click on the desired sites and utilize the '+ Add to Route' option to include them in your meticulously optimized route. Our advanced system strategically arranges the selected sites to ensure an efficient and enjoyable journey. Thank you for choosing our route planning service.
+            </p>
             <ul className="site-list">
-                {routeSites.map((site, index) => (
-                    <li key={index} className="site-list-item">
-                        <span className="site-name">{site.name}</span>
-                        <button
-                            className="delete-button"
-                            onClick={() => handleDeleteSite(site.id)}
-                        >
-                            Delete
-                        </button>
-                    </li>
-                ))}
+                {isLoading ? (
+                    <p>Loading...</p>
+                ) : routeSites.at(0) !== null ? (
+                    routeSites.map((site, index) => (
+                        <li key={site.id} className={`site-list-item ${index === 0 ? 'starting-location' : ''}`}>
+                            <span className="site-name">{index === 0 ? 'Starting Location: ' : ''}{site.name}</span>
+                            <button className="delete-button" onClick={() => handleDeleteSite(site.id)}>
+                                Delete
+                            </button>
+                        </li>
+                    ))
+                ) : (
+                    <p>No sites in the route.</p>
+                )}
             </ul>
             <button onClick={onClose}>Close</button>
             <button onClick={handleToggleRouting}>
                 {isRoutingVisible ? 'Hide Routing' : 'Show Routing'}
             </button>
+            <p className="show-route-text" style={{ fontSize: 'larger' }}>
+                When clicked, the map will display (or hide) your route.
+            </p>
             <Routing isVisible={isRoutingVisible} routeSites={routeSites} />
         </div>
     );
