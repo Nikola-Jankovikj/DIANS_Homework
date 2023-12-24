@@ -1,25 +1,91 @@
 import "./LoginAndRegister.css"
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 const Register = () => {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [error, setError] = useState(""); // Added state for error message
+    const navigate = useNavigate();
 
+    const handleRegister = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch("http://localhost:8080/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                body: new URLSearchParams({
+                    email: email,
+                    password: password,
+                    confirmPassword: confirmPassword,
+                }),
+                credentials: "include",
+            });
 
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+                navigate("/login");
+            } else {
+                const errorData = await response.json();
+                setError(errorData.info); // Set the error message state
+                console.error(errorData);
+            }
+        } catch (error) {
+            setError("Error during registration. Please try again.");
+            console.error("Error during registration:", error);
+        }
+    };
 
     return (
-
         <div className={"parentForm"}>
-            <form className={"actualForm"}>
-                <label form="email" className={"formLabel"}>email</label>
-                <input type="email" placeholder="youremail@email.com" id="email" name="email" className={"formInput"}/>
-                <label form="password" className={"formLabel"}>password</label>
-                <input type="password" placeholder="********" id="password" name="password" className={"formInput"}/>
-                <label form="confirmPassword" className={"formLabel"}>confirmPassword</label>
-                <input type="password" placeholder="********" id="confirmPassword" name="confirmPassword" className={"formInput"}/>
-                <button className={"formButton"}>Register</button>
-                <a href="/login" className={"formAnchor"}>Already have an account?</a>
+            <form className={"actualForm"} onSubmit={handleRegister}>
+                <label htmlFor="email" className={"formLabel"}>
+                    email
+                </label>
+                <input
+                    type="email"
+                    placeholder="youremail@email.com"
+                    id="email"
+                    name="email"
+                    className={"formInput"}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+                <label htmlFor="password" className={"formLabel"}>
+                    password
+                </label>
+                <input
+                    type="password"
+                    placeholder="********"
+                    id="password"
+                    name="password"
+                    className={"formInput"}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <label htmlFor="confirmPassword" className={"formLabel"}>
+                    confirmPassword
+                </label>
+                <input
+                    type="password"
+                    placeholder="********"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    className={"formInput"}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+                {error && <p style={{color: "red"}} className="error-message">{error}</p>}
+                <button className={"formButton"} type="submit">
+                    Register
+                </button>
+                <a href="/login" className={"formAnchor"}>
+                    Already have an account?
+                </a>
             </form>
         </div>
-
-
     );
 };
 
-export default Register
+export default Register;

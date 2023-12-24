@@ -19,6 +19,7 @@ const Favorites = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: "include", // Include cookies in the request
                 // Include any necessary authentication tokens or headers
             });
 
@@ -50,6 +51,7 @@ const Favorites = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: "include", // Include cookies in the request
             body: JSON.stringify({ objectId }),
             // Include any necessary authentication tokens or headers
         })
@@ -76,6 +78,7 @@ const Favorites = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                credentials: "include", // Include cookies in the request
             });
 
             if (response.ok) {
