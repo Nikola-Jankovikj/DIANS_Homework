@@ -26,4 +26,9 @@ public class User {
         this.password = password;
         this.profilePicture = profilePicture;
     }
+
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }

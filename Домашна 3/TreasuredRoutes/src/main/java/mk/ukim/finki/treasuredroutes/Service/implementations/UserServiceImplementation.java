@@ -1,13 +1,18 @@
 package mk.ukim.finki.treasuredroutes.Service.implementations;
 
+
 import mk.ukim.finki.treasuredroutes.Model.Exceptions.EmailInUseException;
 import mk.ukim.finki.treasuredroutes.Model.Exceptions.UserNotFoundException;
+
+import mk.ukim.finki.treasuredroutes.Model.Exceptions.*;
+
 import mk.ukim.finki.treasuredroutes.Model.User;
 import mk.ukim.finki.treasuredroutes.Repository.UserRepository;
 import mk.ukim.finki.treasuredroutes.Service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImplementation implements UserService {
@@ -29,10 +34,11 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public User changeEmailAddress(String newEmail, Long id) throws UserNotFoundException, EmailInUseException {
-        List<User> usersWithEmail = findByEmail(newEmail);
 
-        if (!usersWithEmail.isEmpty() && !usersWithEmail.get(0).getId().equals(id)) {
+    public User changeEmailAddress(String newEmail, Long id) throws UserNotFoundException, EmailInUseException, EmailDoesNotExist {
+        User user = userRepository.findByEmail(newEmail).orElse(null);
+
+        if (user!=null) {
             throw new EmailInUseException("Email already in use by another user");
         }
 
@@ -46,8 +52,8 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public List<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public User findByEmail(String email) throws EmailDoesNotExist {
+        return userRepository.findByEmail(email).orElseThrow(EmailDoesNotExist::new);
     }
 
     @Override
@@ -64,4 +70,34 @@ public class UserServiceImplementation implements UserService {
         user.setPassword(newPassword);
         return userRepository.save(user);
     }
+
+    public User login(String email, String password) throws InvalidArgumentsException, InvalidUserCredentialsException {
+        if (email == null || password == null || email.isBlank() || password.isBlank()) {
+            throw new InvalidArgumentsException();
+        }
+
+        return userRepository.findByEmailAndPassword(email, password)
+                .orElseThrow(InvalidUserCredentialsException::new);
+    }
+
+
+    @Override
+    public User register(String email, String password, String confirmPassword) throws InvalidArgumentsException, PasswordsDoNotMatchException, EmailAlreadyExistsException {
+        if (email == null || password == null || email.isBlank() || password.isBlank()) {
+            throw new InvalidArgumentsException();
+        }
+
+        if (!password.equals(confirmPassword)) {
+            throw new PasswordsDoNotMatchException();
+        }
+
+        if(this.userRepository.findByEmail(email).isPresent()) {
+            throw new EmailAlreadyExistsException();
+        }
+
+        User user = new User(email, password);
+        return userRepository.save(user);
+    }
+
+
 }

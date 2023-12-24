@@ -1,5 +1,6 @@
 package mk.ukim.finki.treasuredroutes.Web;
 
+import mk.ukim.finki.treasuredroutes.Model.Exceptions.EmailDoesNotExist;
 import mk.ukim.finki.treasuredroutes.Model.Exceptions.EmailInUseException;
 import mk.ukim.finki.treasuredroutes.Model.Exceptions.UserNotFoundException;
 import mk.ukim.finki.treasuredroutes.Model.User;
@@ -59,7 +60,7 @@ public class UserController {
             response.put("newEmail", updatedUser.getEmail());
 
             return ResponseEntity.ok(response);
-        } catch (UserNotFoundException | EmailInUseException e) {
+        } catch (UserNotFoundException | EmailInUseException | EmailDoesNotExist e) {
 
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", e.getMessage());
