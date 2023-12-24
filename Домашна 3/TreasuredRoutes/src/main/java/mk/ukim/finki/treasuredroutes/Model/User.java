@@ -19,6 +19,14 @@ public class User {
 
     private String password;
 
+    private String profilePicture;
+
+    public User(String email, String password, String profilePicture) {
+        this.email = email;
+        this.password = password;
+        this.profilePicture = profilePicture;
+    }
+
     public User(String email, String password) {
         this.email = email;
         this.password = password;
