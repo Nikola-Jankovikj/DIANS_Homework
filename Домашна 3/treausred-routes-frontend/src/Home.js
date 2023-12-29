@@ -15,18 +15,40 @@ import Routing from "./Routing"; // Import the ProfileDropdown component
 import "./styles.css";
 import "leaflet/dist/leaflet.css";
 
+const customIcon = new Icon({
+    iconUrl: require('./resources/location-pin.png'),
+    iconSize: [38, 38]
+});
 
 const Home = () => {
-    const customIcon = new Icon({
-        iconUrl: require('./resources/location-pin.png'),
-        iconSize: [38, 38]
-    });
 
     const routePlannerSidebarRef = useRef();
 
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [routeSites, setRouteSites] = useState([]);
-    const openSidebar = () => {
+    const openSidebar = async () => {
+
+        const myLocation = await fetch('http://localhost:8080/api/0')
+        setRouteSites((prevSites) => [...prevSites, myLocation]);
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(success, error);
+        } else {
+            console.log("Geolocation not supported");
+        }
+
+        async function success (position)  {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+        }
+
+        function error() {
+            console.log("Unable to retrieve your location");
+        }
+
+
+
         console.log('Button clicked. Opening sidebar...');
 
         setSidebarOpen(true);
@@ -56,6 +78,7 @@ const Home = () => {
     };
 
     const handleRemoveFromRoute = (index) => {
+        console.log("NOVOTO DODADENO CONSOLE LOG" + index)
         setRouteSites((prevSites) => prevSites.filter((_, i) => i !== index));
     };
 
@@ -108,18 +131,16 @@ const Home = () => {
     }, []);  // Run this effect only once on mount
 
     useEffect(() => {
-        setFavoritedStates(Array(state.length).fill(false));
-        state.forEach((obj, index) => {
-            if (favorites.some(favorite => favorite.id === obj.id)) {
-                setFavoritedStates(prevStates => {
-                    const newStates = [...prevStates];
+        setFavoritedStates(prevStates => {
+            const newStates = Array(state.length).fill(false);
+            state.forEach((obj, index) => {
+                if (favorites.some(favorite => favorite.id === obj.id)) {
                     newStates[index] = true;
-                    return newStates;
-                });
-            }
+                }
+            });
+            return newStates;
         });
-    }, [favorites, state]);
-
+    }, [state]);
 
     const [selectedLocations, setSelectedLocations] = useState([]);
 
@@ -152,8 +173,6 @@ const Home = () => {
             [objectId]: avgRating,
         }));
     }
-
-
 
     const updateMapViaNavButtons = (selectedFilter) => {
         setUrl(selectedFilter);
@@ -270,7 +289,7 @@ const Home = () => {
                         addToRoute={handleAddToRoute}
                         routeSites={routeSites}
                         removeFromRoute={handleRemoveFromRoute}
-                        updateRouteSites={handleAddToRoute()}
+                        updateRouteSites={handleAddToRoute}
                     />
                 )}
             </div>
@@ -296,13 +315,12 @@ const Home = () => {
                                                 key={starId}
                                                 onClick={() => handleStarClick(obj.id, starId)}
                                             >
-                        {userRatings[obj.id] >= starId ? '★' : '☆'}
-                    </span>
+                                            {userRatings[obj.id] >= starId ? '★' : '☆'}
+                                             </span>
                                         ))}
                                         <span className="averageRating">
-                    Average:
-                                            {averageRatings[obj.id] && ` ${averageRatings[obj.id].toFixed(1)}`}
-                </span>
+                                        Average: {averageRatings[obj.id] && ` ${averageRatings[obj.id].toFixed(1)}`}
+                                         </span>
                                     </div>
                                     <button onClick={() => handleAddToRoute(obj)}>
                                         + Add to Route
