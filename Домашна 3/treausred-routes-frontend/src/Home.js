@@ -123,61 +123,36 @@ const Home = () => {
 
     const [selectedLocations, setSelectedLocations] = useState([]);
 
-    useEffect(() => {
-        const fetchUserRatings = async () => {
-            try {
-                const objects = state.map(obj => obj.id);
-                const userRatingsData = await Promise.all(
-                    objects.map(async objectId => {
-                        const userRatingData = await fetch(`http://localhost:8080/reviews/userRating/${objectId}`, {
-                            method: 'GET',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            credentials: "include", // Include cookies in the reques
-                        });
-                        const userRating = await userRatingData.json();
-                        return { objectId, userRating };
-                    })
-                );
+    const fetchPopupDetails = async (objectId) => {
+        await fetchUserRatings(objectId)
+        await fetchAverageRatings(objectId)
+    }
 
-                const userRatingsMap = {};
-                userRatingsData.forEach(item => {
-                    userRatingsMap[item.objectId] = item.userRating;
-                });
+    const fetchUserRatings = async (objectId) => {
+        const userRatingData = await fetch(`http://localhost:8080/reviews/userRating/${objectId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: "include", // Include cookies in the reques
+        });
+        const userRating = await userRatingData.json();
+        setUserRatings(prevRatings => ({
+            ...prevRatings,
+            [objectId]: userRating,
+        }));
 
-                setUserRatings(userRatingsMap);
-            } catch (error) {
-                console.error('Error fetching user ratings:', error);
-            }
-        };
+    }
 
-        const fetchAverageRatings = async () => {
-            try {
-                const objects = state.map(obj => obj.id);
-                const averageRatingsData = await Promise.all(
-                    objects.map(async objectId => {
-                        const avgRatingData = await fetch(`http://localhost:8080/reviews/rating/${objectId}`);
-                        const avgRating = await avgRatingData.json();
-                        return { objectId, avgRating };
-                    })
-                );
+    const fetchAverageRatings = async (objectId) => {
+        const avgRatingData = await fetch(`http://localhost:8080/reviews/rating/${objectId}`);
+        const avgRating = await avgRatingData.json();
+        setAverageRatings(prevAvgRatings => ({
+            ...prevAvgRatings,
+            [objectId]: avgRating,
+        }));
+    }
 
-                const averageRatingsMap = {};
-                averageRatingsData.forEach(item => {
-                    averageRatingsMap[item.objectId] = item.avgRating;
-                });
-
-                setAverageRatings(averageRatingsMap);
-            } catch (error) {
-                console.error('Error fetching average ratings:', error);
-            }
-        };
-
-        // Fetch user ratings and average ratings
-        fetchUserRatings();
-        fetchAverageRatings();
-    }, [state]); // Fetch ratings whenever the state changes
 
 
     const updateMapViaNavButtons = (selectedFilter) => {
@@ -220,8 +195,6 @@ const Home = () => {
                     newStates[index] = !newStates[index];
                     return newStates;
                 });
-
-
 
             } else {
                 console.error('Failed to toggle favorites');
@@ -272,8 +245,6 @@ const Home = () => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
 
-
-
             <MapPanAndZoomController ref={controllerRef} />
 
             <div id={"top-bar"}>
@@ -288,10 +259,7 @@ const Home = () => {
                     <NavComponent updateMarkers={updateMapViaNavButtons} />
                 </div>
 
-
                 <ProfileDropdown /> {/* Use the ProfileDropdown component */}
-
-
             </div>
 
             <div id="plan-route-button">
@@ -307,16 +275,9 @@ const Home = () => {
                 )}
             </div>
 
-
-
-
-
-
-
-
             <MarkerClusterGroup chunkedLoading>
                 {state.map((obj, index) => (
-                    <Marker key={obj.id} position={[obj.lat, obj.lon]} icon={customIcon}>
+                    <Marker key={obj.id} position={[obj.lat, obj.lon]} icon={customIcon} eventHandlers={{popupopen: () => fetchPopupDetails(obj.id)}}>
                         <Popup>
                             <div className="card">
                                 <h2 className="cardTitle">{obj.name}</h2>
@@ -352,9 +313,6 @@ const Home = () => {
                     </Marker>
                 ))}
             </MarkerClusterGroup>
-
-
-
 
             <ZoomControl position="bottomright" />
 
