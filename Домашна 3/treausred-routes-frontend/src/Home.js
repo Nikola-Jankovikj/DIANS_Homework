@@ -121,13 +121,21 @@ const Home = () => {
     }, [favorites, state]);
 
 
-    const [selectedLocations, setSelectedLocations] = useState([]);    useEffect(() => {
+    const [selectedLocations, setSelectedLocations] = useState([]);
+
+    useEffect(() => {
         const fetchUserRatings = async () => {
             try {
                 const objects = state.map(obj => obj.id);
                 const userRatingsData = await Promise.all(
                     objects.map(async objectId => {
-                        const userRatingData = await fetch(`http://localhost:8080/reviews/userRating/${objectId}`);
+                        const userRatingData = await fetch(`http://localhost:8080/reviews/userRating/${objectId}`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            credentials: "include", // Include cookies in the reques
+                        });
                         const userRating = await userRatingData.json();
                         return { objectId, userRating };
                     })
