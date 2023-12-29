@@ -6,7 +6,8 @@ import { useMap } from "react-leaflet";
 import "./styles.css"
 
 L.Marker.prototype.options.icon = L.icon({
-    iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png"
+    iconUrl: require('./resources/location-pin.png'),
+    iconSize: [38, 38]
 });
 
 export default function Routing({ isVisible, routeSites }) {
