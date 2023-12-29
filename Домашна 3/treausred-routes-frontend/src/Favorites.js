@@ -30,7 +30,17 @@ const Favorites = () => {
                 const favoritesWithRatingsPromises = data.map(async (favorite) => {
                     const ratingResponse = await fetch(`http://localhost:8080/reviews/rating/${favorite.id}`);
                     const ratingData = await ratingResponse.json();
-                    return { ...favorite, rating: ratingData };
+
+                    const userRatingResponse = await fetch(`http://localhost:8080/reviews/userRating/${favorite.id}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        credentials: "include", // Include cookies in the reques
+                    });
+                    const userRating = await userRatingResponse.json()
+
+                    return { ...favorite, starRating: userRating, averageRating: ratingData };
                 });
 
                 const favoritesWithRatings = await Promise.all(favoritesWithRatingsPromises);
@@ -113,11 +123,11 @@ const Favorites = () => {
                                             key={id}
                                             onClick={() => handleRatingClick(favorite.id, id)}
                                         >
-                                            {id <= favorite.rating ? '★' : '☆'}
+                                            {id <= favorite.starRating ? '★' : '☆'}
                                         </span>
                                     ))}
                                 </div>
-                                <span>Average: {favorite.rating}</span>
+                                <span>Average: {favorite.averageRating}</span>
                             </section>
                         </div>
                     ))}
