@@ -32,7 +32,7 @@ export default function Routing({ isVisible, routeSites }) {
         container.style.bottom = '10px'; // Adjust the bottom value as needed
         container.style.left = '10px';
 
-        return () => map.removeControl(routingControl);
+        return () => map;
     }, [map, isVisible, routeSites]);
 
     return null;
