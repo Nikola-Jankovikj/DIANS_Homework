@@ -15,40 +15,18 @@ import Routing from "./Routing"; // Import the ProfileDropdown component
 import "./styles.css";
 import "leaflet/dist/leaflet.css";
 
-const customIcon = new Icon({
-    iconUrl: require('./resources/location-pin.png'),
-    iconSize: [38, 38]
-});
 
 const Home = () => {
+    const customIcon = new Icon({
+        iconUrl: require('./resources/location-pin.png'),
+        iconSize: [38, 38]
+    });
 
     const routePlannerSidebarRef = useRef();
 
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [routeSites, setRouteSites] = useState([]);
-    const openSidebar = async () => {
-
-        const myLocation = await fetch('http://localhost:8080/api/0')
-        setRouteSites((prevSites) => [...prevSites, myLocation]);
-
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(success, error);
-        } else {
-            console.log("Geolocation not supported");
-        }
-
-        async function success (position)  {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
-        }
-
-        function error() {
-            console.log("Unable to retrieve your location");
-        }
-
-
-
+    const openSidebar = () => {
         console.log('Button clicked. Opening sidebar...');
 
         setSidebarOpen(true);
@@ -78,7 +56,6 @@ const Home = () => {
     };
 
     const handleRemoveFromRoute = (index) => {
-        console.log("NOVOTO DODADENO CONSOLE LOG" + index)
         setRouteSites((prevSites) => prevSites.filter((_, i) => i !== index));
     };
 
@@ -88,7 +65,6 @@ const Home = () => {
 
         setSidebarOpen(false);
     };
-
 
 
     const controllerRef = useRef();
@@ -131,48 +107,76 @@ const Home = () => {
     }, []);  // Run this effect only once on mount
 
     useEffect(() => {
-        setFavoritedStates(prevStates => {
-            const newStates = Array(state.length).fill(false);
-            state.forEach((obj, index) => {
-                if (favorites.some(favorite => favorite.id === obj.id)) {
+        setFavoritedStates(Array(state.length).fill(false));
+        state.forEach((obj, index) => {
+            if (favorites.some(favorite => favorite.id === obj.id)) {
+                setFavoritedStates(prevStates => {
+                    const newStates = [...prevStates];
                     newStates[index] = true;
-                }
-            });
-            return newStates;
+                    return newStates;
+                });
+            }
         });
     }, [state]);
 
     const [selectedLocations, setSelectedLocations] = useState([]);
 
-    const fetchPopupDetails = async (objectId) => {
-        await fetchUserRatings(objectId)
-        await fetchAverageRatings(objectId)
-    }
+    useEffect(() => {
+        const fetchUserRatings = async () => {
+            try {
+                const objects = state.map(obj => obj.id);
+                const userRatingsData = await Promise.all(
+                    objects.map(async objectId => {
+                        const userRatingData = await fetch(`http://localhost:8080/reviews/userRating/${objectId}`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            credentials: "include", // Include cookies in the reques
+                        });
+                        const userRating = await userRatingData.json();
+                        return { objectId, userRating };
+                    })
+                );
 
-    const fetchUserRatings = async (objectId) => {
-        const userRatingData = await fetch(`http://localhost:8080/reviews/userRating/${objectId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: "include", // Include cookies in the reques
-        });
-        const userRating = await userRatingData.json();
-        setUserRatings(prevRatings => ({
-            ...prevRatings,
-            [objectId]: userRating,
-        }));
+                const userRatingsMap = {};
+                userRatingsData.forEach(item => {
+                    userRatingsMap[item.objectId] = item.userRating;
+                });
 
-    }
+                setUserRatings(userRatingsMap);
+            } catch (error) {
+                console.error('Error fetching user ratings:', error);
+            }
+        };
 
-    const fetchAverageRatings = async (objectId) => {
-        const avgRatingData = await fetch(`http://localhost:8080/reviews/rating/${objectId}`);
-        const avgRating = await avgRatingData.json();
-        setAverageRatings(prevAvgRatings => ({
-            ...prevAvgRatings,
-            [objectId]: avgRating,
-        }));
-    }
+        const fetchAverageRatings = async () => {
+            try {
+                const objects = state.map(obj => obj.id);
+                const averageRatingsData = await Promise.all(
+                    objects.map(async objectId => {
+                        const avgRatingData = await fetch(`http://localhost:8080/reviews/rating/${objectId}`);
+                        const avgRating = await avgRatingData.json();
+                        return { objectId, avgRating };
+                    })
+                );
+
+                const averageRatingsMap = {};
+                averageRatingsData.forEach(item => {
+                    averageRatingsMap[item.objectId] = item.avgRating;
+                });
+
+                setAverageRatings(averageRatingsMap);
+            } catch (error) {
+                console.error('Error fetching average ratings:', error);
+            }
+        };
+
+        // Fetch user ratings and average ratings
+        fetchUserRatings();
+        fetchAverageRatings();
+    }, [state]); // Fetch ratings whenever the state changes
+
 
     const updateMapViaNavButtons = (selectedFilter) => {
         setUrl(selectedFilter);
@@ -214,7 +218,6 @@ const Home = () => {
                     newStates[index] = !newStates[index];
                     return newStates;
                 });
-
             } else {
                 console.error('Failed to toggle favorites');
             }
@@ -256,7 +259,6 @@ const Home = () => {
         }
     };
 
-
     return (
         <MapContainer center={initialCenter} zoom={initialZoom} zoomControl={false}>
             <TileLayer
@@ -278,7 +280,8 @@ const Home = () => {
                     <NavComponent updateMarkers={updateMapViaNavButtons} />
                 </div>
 
-                <ProfileDropdown /> {/* Use the ProfileDropdown component */}
+                <ProfileDropdown />
+
             </div>
 
             <div id="plan-route-button">
@@ -289,14 +292,14 @@ const Home = () => {
                         addToRoute={handleAddToRoute}
                         routeSites={routeSites}
                         removeFromRoute={handleRemoveFromRoute}
-                        updateRouteSites={handleAddToRoute}
+                        updateRouteSites={handleAddToRoute()}
                     />
                 )}
             </div>
 
             <MarkerClusterGroup chunkedLoading>
                 {state.map((obj, index) => (
-                    <Marker key={obj.id} position={[obj.lat, obj.lon]} icon={customIcon} eventHandlers={{popupopen: () => fetchPopupDetails(obj.id)}}>
+                    <Marker key={obj.id} position={[obj.lat, obj.lon]} icon={customIcon}>
                         <Popup>
                             <div className="card">
                                 <h2 className="cardTitle">{obj.name}</h2>
@@ -315,11 +318,12 @@ const Home = () => {
                                                 key={starId}
                                                 onClick={() => handleStarClick(obj.id, starId)}
                                             >
-                                            {userRatings[obj.id] >= starId ? '★' : '☆'}
+                                                {userRatings[obj.id] >= starId ? '★' : '☆'}
                                              </span>
                                         ))}
                                         <span className="averageRating">
-                                        Average: {averageRatings[obj.id] && ` ${averageRatings[obj.id].toFixed(1)}`}
+                                            Average:
+                                            {averageRatings[obj.id] && ` ${averageRatings[obj.id].toFixed(1)}`}
                                          </span>
                                     </div>
                                     <button onClick={() => handleAddToRoute(obj)}>
@@ -335,7 +339,6 @@ const Home = () => {
             <ZoomControl position="bottomright" />
 
         </MapContainer>
-
 
     );
 };
