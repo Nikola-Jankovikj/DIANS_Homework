@@ -43,7 +43,7 @@
     justify-content: space-between;
     flex-basis: calc(25% - 40px); /* Adjust as needed based on margin and desired spacing */
     box-sizing: border-box;
-    background-image: url('resources/map.webp');
+    background-image: url('../resources/map.webp');
     background-size: cover; /* Ensure the image covers the entire element */
     background-position: center;
 }

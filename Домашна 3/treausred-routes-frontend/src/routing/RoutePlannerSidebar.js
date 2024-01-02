@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './RoutePlannerSidebar.css';
 import Routing from './Routing';
+import {getUserLocation} from "../utils/routing_utils";
 
 const RoutePlannerSidebar = ({ onClose, removeFromRoute, updateRouteSites, handleAddToRoute }) => {
     const [routeSites, setRouteSites] = useState([]);
@@ -41,6 +42,15 @@ const RoutePlannerSidebar = ({ onClose, removeFromRoute, updateRouteSites, handl
                     // Handle non-successful response (e.g., 404 Not Found)
                     throw new Error(`Failed to fetch route sites (HTTP ${response.status})`);
                 }
+
+                getUserLocation()
+                    .then((coordinates) => {
+                        console.log("User location:", coordinates);
+                        finalData.push()
+                    })
+                    .catch((error) => {
+                        console.error("Error getting user location:", error);
+                    });
 
                 const data = await response.json();
                 setRouteSites(data);

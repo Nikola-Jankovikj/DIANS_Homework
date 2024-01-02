@@ -64,7 +64,7 @@ const Login = () => {
                 <button className={"formButton"} type="submit">
                     Log in
                 </button>
-                <a href="/register" className={"formAnchor"}>
+                <a href="/Register" className={"formAnchor"}>
                     Don't have an account?
                 </a>
             </form>

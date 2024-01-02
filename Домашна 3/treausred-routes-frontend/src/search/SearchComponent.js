@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {calculateNewCenter, fetchData, getBoundingBox} from "./utils";
+import {calculateNewCenter, fetchData, getBoundingBox} from "../utils/search_utils";
 
 const SearchComponent = ({updateMarkers, focusTarget, focusMap}, initialCenter) => {
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Profile.css";
 import { useNavigate } from "react-router-dom";
-import ChangePasswordForm from "./ChangePasswordForm";
+import ChangePasswordForm from "../forms/ChangePasswordForm";
 
 const Profile = () => {
     const navigate = useNavigate();

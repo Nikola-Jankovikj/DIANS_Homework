@@ -2,14 +2,29 @@ import { useEffect, useState } from "react";
 import "./Favorites.css";
 import { useNavigate } from "react-router-dom";
 
-const Favorites = () => {
+const Favorites = (state) => {
     const navigate = useNavigate();
     const [favorites, setFavorites] = useState([]);
+    const [favoritedStates, setFavoritedStates] = useState([]);
 
     useEffect(() => {
         // Fetch user's favorites from the server when the component mounts
         fetchFavorites();
     }, []);
+
+    // useEffect(() => {
+    //     console.log("AU NE?" + state.length)
+    //     setFavoritedStates(Array(state.length).fill(false));
+    //     state.forEach((obj, index) => {
+    //         if (favorites.some(favorite => favorite.id === obj.id)) {
+    //             setFavoritedStates(prevStates => {
+    //                 const newStates = [...prevStates];
+    //                 newStates[index] = true;
+    //                 return newStates;
+    //             });
+    //         }
+    //     });
+    // }, [state]);
 
     const fetchFavorites = async () => {
         try {

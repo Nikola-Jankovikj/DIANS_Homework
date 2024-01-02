@@ -3,10 +3,10 @@ import L from "leaflet";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import "leaflet-routing-machine";
 import { useMap } from "react-leaflet";
-import "./styles.css"
+import "../styles.css"
 
 L.Marker.prototype.options.icon = L.icon({
-    iconUrl: require('./resources/location-pin.png'),
+    iconUrl: require('../resources/location-pin.png'),
     iconSize: [38, 38]
 });
 
@@ -32,7 +32,7 @@ export default function Routing({ isVisible, routeSites }) {
         container.style.bottom = '10px'; // Adjust the bottom value as needed
         container.style.left = '10px';
 
-        return () => map;
+        return () => map.removeControl(routingControl);
     }, [map, isVisible, routeSites]);
 
     return null;

@@ -1,20 +1,22 @@
 import { MapContainer, Marker, TileLayer, Popup, ZoomControl } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { useEffect, useRef, useState } from "react";
+import React, {createContext, useContext, useEffect, useRef, useState} from "react";
 import { Icon } from "leaflet/dist/leaflet-src.esm";
 import MarkerClusterGroup from "react-leaflet-cluster";
-import './MapComponent.css';
+import './map/MapComponent.css';
 import Dropdown from 'react-bootstrap/Dropdown';
-import './Search.css';
-import MapPanAndZoomController from "./MapPanAndZoomController";
-import NavComponent from "./NavComponent";
-import SearchComponent from "./SearchComponent";
-import ProfileDropdown from "./ProfileDropdown";
-import RoutePlannerSidebar from './RoutePlannerSidebar';
-import Routing from "./Routing"; // Import the ProfileDropdown component
+import './search/Search.css';
+import MapPanAndZoomController from "./map/MapPanAndZoomController";
+import NavComponent from "./search/NavComponent";
+import SearchComponent from "./search/SearchComponent";
+import ProfileDropdown from "./profile/ProfileDropdown";
+import RoutePlannerSidebar from './routing/RoutePlannerSidebar';
+import Routing from "./routing/Routing"; // Import the ProfileDropdown component
 import "./styles.css";
 import "leaflet/dist/leaflet.css";
+import PopupCard from "./map/PopupCard";
 
+export const StateContext = createContext();
 
 const Home = () => {
     const customIcon = new Icon({
@@ -73,51 +75,52 @@ const Home = () => {
 
     const [url, setUrl] = useState('http://localhost:8080/api/all');
     const [state, setState] = useState([]);
-    const [favoritedStates, setFavoritedStates] = useState([]);
-    const [favorites, setFavorites] = useState([]);
+
+    // const [favoritedStates, setFavoritedStates] = useState([]);
+    // const [favorites, setFavorites] = useState([]);
 
     const [userRatings, setUserRatings] = useState({});
     const [averageRatings, setAverageRatings] = useState({});
 
 
-    const fetchFavorites = () => {
-        fetch('http://localhost:8080/favorites/all', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: "include", // Include cookies in the reques
-        })
-            .then(response => response.json())
-            .then(data => setFavorites(data))
-            .catch(error => console.log("error"));
-    };
+    // const fetchFavorites = () => {
+    //     fetch('http://localhost:8080/favorites/all', {
+    //         method: 'GET',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //         credentials: "include", // Include cookies in the reques
+    //     })
+    //         .then(response => response.json())
+    //         .then(data => setFavorites(data))
+    //         .catch(error => console.log("error"));
+    // };
 
     useEffect(() => {
         fetch(url)
             .then(response => response.json())
             .then(data => {
                 setState(data);
-                setFavoritedStates(data.map(obj => obj.isFavorited || false));
+                //setFavoritedStates(data.map(obj => obj.isFavorited || false));
             })
     }, [url]);
 
-    useEffect(() => {
-        fetchFavorites();
-    }, []);  // Run this effect only once on mount
+    // useEffect(() => {
+    //     fetchFavorites();
+    // }, []);  // Run this effect only once on mount
 
-    useEffect(() => {
-        setFavoritedStates(Array(state.length).fill(false));
-        state.forEach((obj, index) => {
-            if (favorites.some(favorite => favorite.id === obj.id)) {
-                setFavoritedStates(prevStates => {
-                    const newStates = [...prevStates];
-                    newStates[index] = true;
-                    return newStates;
-                });
-            }
-        });
-    }, [state]);
+    // useEffect(() => {
+    //     setFavoritedStates(Array(state.length).fill(false));
+    //     state.forEach((obj, index) => {
+    //         if (favorites.some(favorite => favorite.id === obj.id)) {
+    //             setFavoritedStates(prevStates => {
+    //                 const newStates = [...prevStates];
+    //                 newStates[index] = true;
+    //                 return newStates;
+    //             });
+    //         }
+    //     });
+    // }, [state]);
 
     const [selectedLocations, setSelectedLocations] = useState([]);
 
@@ -173,8 +176,8 @@ const Home = () => {
         };
 
         // Fetch user ratings and average ratings
-        fetchUserRatings();
-        fetchAverageRatings();
+        // fetchUserRatings();
+        // fetchAverageRatings();
     }, [state]); // Fetch ratings whenever the state changes
 
 
@@ -195,69 +198,69 @@ const Home = () => {
         controllerRef.current.focusMap(coordinates);
     };
 
-    const addToRoute = (locationName) => {
-        setSelectedLocations((prevSelectedLocations) => [...prevSelectedLocations, locationName]);
-    };
+    // const addToRoute = (locationName) => {
+    //     setSelectedLocations((prevSelectedLocations) => [...prevSelectedLocations, locationName]);
+    // };
 
-    const handleToggleFavorite = async (objectId, locationName) => {
-        try {
-            const isCurrentlyFavorited = favoritedStates[state.findIndex(obj => obj.id === objectId)];
-            const response = await fetch('http://localhost:8080/favorites', {
-                method: isCurrentlyFavorited ? 'DELETE' : 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: "include", // Include cookies in the request
-                body: JSON.stringify({ objectId }),
-            });
-
-            if (response.ok) {
-                setFavoritedStates(prevStates => {
-                    const newStates = [...prevStates];
-                    const index = state.findIndex(obj => obj.id === objectId);
-                    newStates[index] = !newStates[index];
-                    return newStates;
-                });
-            } else {
-                console.error('Failed to toggle favorites');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
-
-    const handleStarClick = async (objectId, rating) => {
-        try {
-            const response = await fetch(`http://localhost:8080/reviews/${objectId}/${rating}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                credentials: "include", // Include cookies in the request
-            });
-
-            if (response.ok) {
-                // Update user ratings
-                setUserRatings(prevRatings => ({
-                    ...prevRatings,
-                    [objectId]: rating,
-                }));
-
-                // Fetch and update average ratings
-                const avgRatingResponse = await fetch(`http://localhost:8080/reviews/rating/${objectId}`);
-                const avgRating = await avgRatingResponse.json();
-
-                setAverageRatings(prevAvgRatings => ({
-                    ...prevAvgRatings,
-                    [objectId]: avgRating,
-                }));
-            } else {
-                console.error('Failed to add review');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
+    // const handleToggleFavorite = async (objectId, locationName) => {
+    //     try {
+    //         const isCurrentlyFavorited = favoritedStates[state.findIndex(obj => obj.id === objectId)];
+    //         const response = await fetch('http://localhost:8080/favorites', {
+    //             method: isCurrentlyFavorited ? 'DELETE' : 'PUT',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             credentials: "include", // Include cookies in the request
+    //             body: JSON.stringify({ objectId }),
+    //         });
+    //
+    //         if (response.ok) {
+    //             setFavoritedStates(prevStates => {
+    //                 const newStates = [...prevStates];
+    //                 const index = state.findIndex(obj => obj.id === objectId);
+    //                 newStates[index] = !newStates[index];
+    //                 return newStates;
+    //             });
+    //         } else {
+    //             console.error('Failed to toggle favorites');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error:', error);
+    //     }
+    // };
+    //
+    // const handleStarClick = async (objectId, rating) => {
+    //     try {
+    //         const response = await fetch(`http://localhost:8080/reviews/${objectId}/${rating}`, {
+    //             method: 'PUT',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             credentials: "include", // Include cookies in the request
+    //         });
+    //
+    //         if (response.ok) {
+    //             // Update user ratings
+    //             setUserRatings(prevRatings => ({
+    //                 ...prevRatings,
+    //                 [objectId]: rating,
+    //             }));
+    //
+    //             // Fetch and update average ratings
+    //             const avgRatingResponse = await fetch(`http://localhost:8080/reviews/rating/${objectId}`);
+    //             const avgRating = await avgRatingResponse.json();
+    //
+    //             setAverageRatings(prevAvgRatings => ({
+    //                 ...prevAvgRatings,
+    //                 [objectId]: avgRating,
+    //             }));
+    //         } else {
+    //             console.error('Failed to add review');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error:', error);
+    //     }
+    // };
 
     return (
         <MapContainer center={initialCenter} zoom={initialZoom} zoomControl={false}>
@@ -280,7 +283,10 @@ const Home = () => {
                     <NavComponent updateMarkers={updateMapViaNavButtons} />
                 </div>
 
-                <ProfileDropdown />
+                <StateContext.Provider value={state}>
+                    <ProfileDropdown />
+                </StateContext.Provider>
+
 
             </div>
 
@@ -301,36 +307,43 @@ const Home = () => {
                 {state.map((obj, index) => (
                     <Marker key={obj.id} position={[obj.lat, obj.lon]} icon={customIcon}>
                         <Popup>
-                            <div className="card">
-                                <h2 className="cardTitle">{obj.name}</h2>
-                                <section className="cardFt">
-                                    <button
-                                        id="heart"
-                                        className="heartButton"
-                                        onClick={() => handleToggleFavorite(obj.id, index)}
-                                    >
-                                        {favoritedStates[index] ? '🤍️' : '♡'}
-                                    </button>
-                                    <div className="rating">
-                                        {[1, 2, 3, 4, 5].map((starId) => (
-                                            <span
-                                                id="stars"
-                                                key={starId}
-                                                onClick={() => handleStarClick(obj.id, starId)}
-                                            >
-                                                {userRatings[obj.id] >= starId ? '★' : '☆'}
-                                             </span>
-                                        ))}
-                                        <span className="averageRating">
-                                            Average:
-                                            {averageRatings[obj.id] && ` ${averageRatings[obj.id].toFixed(1)}`}
-                                         </span>
-                                    </div>
-                                    <button onClick={() => handleAddToRoute(obj)}>
-                                        + Add to Route
-                                    </button>
-                                </section>
-                            </div>
+                            {/*<div className="card">*/}
+                            {/*    <h2 className="cardTitle">{obj.name}</h2>*/}
+                            {/*    <section className="cardFt">*/}
+                            {/*        <button*/}
+                            {/*            id="heart"*/}
+                            {/*            className="heartButton"*/}
+                            {/*            onClick={() => handleToggleFavorite(obj.id, index)}*/}
+                            {/*        >*/}
+                            {/*            {favoritedStates[index] ? '🤍️' : '♡'}*/}
+                            {/*        </button>*/}
+                            {/*        <div className="rating">*/}
+                            {/*            {[1, 2, 3, 4, 5].map((starId) => (*/}
+                            {/*                <span*/}
+                            {/*                    id="stars"*/}
+                            {/*                    key={starId}*/}
+                            {/*                    onClick={() => handleStarClick(obj.id, starId)}*/}
+                            {/*                >*/}
+                            {/*                    {userRatings[obj.id] >= starId ? '★' : '☆'}*/}
+                            {/*                 </span>*/}
+                            {/*            ))}*/}
+                            {/*            <span className="averageRating">*/}
+                            {/*                Average:*/}
+                            {/*                {averageRatings[obj.id] && ` ${averageRatings[obj.id].toFixed(1)}`}*/}
+                            {/*             </span>*/}
+                            {/*        </div>*/}
+                            {/*        <button onClick={() => handleAddToRoute(obj)}>*/}
+                            {/*            + Add to Route*/}
+                            {/*        </button>*/}
+                            {/*    </section>*/}
+                            {/*</div>*/}
+                            <StateContext.Provider value={state}>
+                                <PopupCard obj={obj}
+                                           index={index}
+                                           setAverageRatings={setAverageRatings}
+                                           setRouteSites={setRouteSites}
+                                />
+                            </StateContext.Provider>
                         </Popup>
                     </Marker>
                 ))}

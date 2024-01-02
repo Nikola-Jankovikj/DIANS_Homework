@@ -80,7 +80,7 @@ const Register = () => {
                 <button className={"formButton"} type="submit">
                     Register
                 </button>
-                <a href="/login" className={"formAnchor"}>
+                <a href="/src/forms/Login" className={"formAnchor"}>
                     Already have an account?
                 </a>
             </form>

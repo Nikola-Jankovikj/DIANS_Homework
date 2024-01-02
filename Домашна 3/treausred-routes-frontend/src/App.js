@@ -2,11 +2,11 @@ import './App.css';
 import React from "react";
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import Home from "./Home";
-import Login from "./Login";
-import Register from "./Register";
-import Favorites from "./Favorites";
-import Profile from "./Profile"
-import ChangePasswordForm from "./ChangePasswordForm";
+import Login from "./forms/Login";
+import Register from "./forms/Register";
+import Favorites from "./favorites/Favorites";
+import Profile from "./profile/Profile"
+import ChangePasswordForm from "./forms/ChangePasswordForm";
 
 
 function App() {

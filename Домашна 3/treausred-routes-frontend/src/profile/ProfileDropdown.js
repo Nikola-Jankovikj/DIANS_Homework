@@ -1,8 +1,11 @@
-import './MapComponent.css';
-import React, {useEffect, useState} from 'react';
+import '../map/MapComponent.css';
+import React, {useContext, useEffect, useState} from 'react';
 import { useNavigate} from "react-router-dom";
+import {StateContext} from "../Home";
 const ProfileDropdown = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const state  = useContext(StateContext);
+    const navigate = useNavigate()
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
@@ -33,8 +36,6 @@ const ProfileDropdown = () => {
 
         fetchUserData();
     }, []);
-
-    const navigate = useNavigate()
     const handleLogout = async () => {
         try {
             const response = await fetch("http://localhost:8080/logout", {
@@ -61,6 +62,15 @@ const ProfileDropdown = () => {
         }
     };
 
+   const navigateFavorites = () => {
+       console.log(state)
+       navigate('/favorites', {state})
+   }
+
+   const navigateAccount = () => {
+       navigate('/profile')
+   }
+
     return (
         <div id="profile-icon">
             <div id="dropdown-basic">
@@ -76,8 +86,8 @@ const ProfileDropdown = () => {
 
             {isOpen && (
                 <div id="dropdown-menu">
-                    <a className="dropdown-item" href="/favorites">Favorites</a>
-                    <a className="dropdown-item" href="/profile">Account</a>
+                    <button className="dropdown-item" onClick={navigateFavorites}>Favorites</button>
+                    <button className="dropdown-item" onClick={navigateAccount}>Account</button>
                     <button className="dropdown-item" onClick={handleLogout}>
                         Log out
                     </button>

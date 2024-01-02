@@ -48,4 +48,12 @@ public class FavoritesController {
         favoritesService.removeFromFavorites(user.getId(), elementId);
         return ResponseEntity.ok("Added to favorites");
     }
+
+    @GetMapping("/check/{elementId}")
+    public ResponseEntity<Boolean> checkIfElementIsFavoritedByUser(@PathVariable Long elementId,
+                                                                   HttpServletRequest request){
+        User user = (User) request.getSession().getAttribute("user");
+        boolean isFavorited = favoritesService.isElementFavorited(user.getId(), elementId);
+        return ResponseEntity.ok(isFavorited);
+    }
 }
