@@ -2,7 +2,7 @@ import {useContext, useEffect, useState} from "react";
 import {StateContext} from "../Home";
 import favorites from "../favorites/Favorites";
 
-const PopupCard = ({obj, index, setAverageRatings, setRouteSites}) => {
+const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRoute}) => {
 
     const [favorite, setFavorite] = useState();
     const [myRating, setMyRating] = useState();
@@ -121,28 +121,28 @@ const PopupCard = ({obj, index, setAverageRatings, setRouteSites}) => {
         }
     };
 
-    const handleAddToRoute = async (site) => {
-        try {
-            // Send a POST request to the backend to add the site to the route
-            const response = await fetch('http://localhost:8080/route/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ siteId: site.id }), // Pass the site ID to the backend
-            });
-
-            if (response.ok) {
-                console.log(`Site ${site.name} added to the route on the backend.`);
-                // Update the routeSites state if needed
-                setRouteSites((prevSites) => [...prevSites, site]);
-            } else {
-                console.error('Failed to add site to the route on the backend.');
-            }
-        } catch (error) {
-            console.error('Error adding site to the route:', error);
-        }
-    };
+    // const handleAddToRoute = async (site) => {
+    //     try {
+    //         // Send a POST request to the backend to add the site to the route
+    //         const response = await fetch('http://localhost:8080/route/add', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({ siteId: site.id }), // Pass the site ID to the backend
+    //         });
+    //
+    //         if (response.ok) {
+    //             console.log(`Site ${site.name} added to the route on the backend.`);
+    //             // Update the routeSites state if needed
+    //             setRouteSites((prevSites) => [...prevSites, site]);
+    //         } else {
+    //             console.error('Failed to add site to the route on the backend.');
+    //         }
+    //     } catch (error) {
+    //         console.error('Error adding site to the route:', error);
+    //     }
+    // };
     
     return (
         <div className="card">

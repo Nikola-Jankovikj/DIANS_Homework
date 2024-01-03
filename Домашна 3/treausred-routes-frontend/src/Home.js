@@ -17,6 +17,7 @@ import "leaflet/dist/leaflet.css";
 import PopupCard from "./map/PopupCard";
 
 export const StateContext = createContext();
+export const RouteContext = createContext();
 
 const Home = () => {
     const customIcon = new Icon({
@@ -24,37 +25,49 @@ const Home = () => {
         iconSize: [38, 38]
     });
 
+    const [reload, setReload] = useState(false);
+
+    const handleReload = () => {
+        // Toggle the reload state to force a re-render
+        setReload((prevReload) => !prevReload);
+        console.log("RELOADED?")
+    };
+
     const routePlannerSidebarRef = useRef();
 
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [routeSites, setRouteSites] = useState([]);
+    const [userLocation, setUserLocation] = useState([])
     const openSidebar = () => {
         console.log('Button clicked. Opening sidebar...');
-
         setSidebarOpen(true);
+        handleReload()
     };
 
     const handleAddToRoute = async (site) => {
-        try {
-            // Send a POST request to the backend to add the site to the route
-            const response = await fetch('http://localhost:8080/route/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ siteId: site.id }), // Pass the site ID to the backend
-            });
-
-            if (response.ok) {
-                console.log(`Site ${site.name} added to the route on the backend.`);
-                // Update the routeSites state if needed
-                setRouteSites((prevSites) => [...prevSites, site]);
-            } else {
-                console.error('Failed to add site to the route on the backend.');
-            }
-        } catch (error) {
-            console.error('Error adding site to the route:', error);
-        }
+        // try {
+        //     // Send a POST request to the backend to add the site to the route
+        //     const response = await fetch('http://localhost:8080/route/add', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //         },
+        //         body: JSON.stringify({ siteId: site.id }), // Pass the site ID to the backend
+        //     });
+        //
+        //     if (response.ok) {
+        //         console.log(`Site ${site.name} added to the route on the backend.`);
+        //         // Update the routeSites state if needed
+        //         setRouteSites((prevSites) => [...prevSites, site]);
+        //     } else {
+        //         console.error('Failed to add site to the route on the backend.');
+        //     }
+        // } catch (error) {
+        //     console.error('Error adding site to the route:', error);
+        // }
+        setRouteSites((prevSites) => [...prevSites, site])
+        console.log("ROUTE SITES ARE: " + routeSites)
+        handleReload()
     };
 
     const handleRemoveFromRoute = (index) => {
@@ -122,7 +135,7 @@ const Home = () => {
     //     });
     // }, [state]);
 
-    const [selectedLocations, setSelectedLocations] = useState([]);
+    //const [selectedLocations, setSelectedLocations] = useState([]);
 
     useEffect(() => {
         const fetchUserRatings = async () => {
@@ -153,27 +166,27 @@ const Home = () => {
             }
         };
 
-        const fetchAverageRatings = async () => {
-            try {
-                const objects = state.map(obj => obj.id);
-                const averageRatingsData = await Promise.all(
-                    objects.map(async objectId => {
-                        const avgRatingData = await fetch(`http://localhost:8080/reviews/rating/${objectId}`);
-                        const avgRating = await avgRatingData.json();
-                        return { objectId, avgRating };
-                    })
-                );
-
-                const averageRatingsMap = {};
-                averageRatingsData.forEach(item => {
-                    averageRatingsMap[item.objectId] = item.avgRating;
-                });
-
-                setAverageRatings(averageRatingsMap);
-            } catch (error) {
-                console.error('Error fetching average ratings:', error);
-            }
-        };
+        // const fetchAverageRatings = async () => {
+        //     try {
+        //         const objects = state.map(obj => obj.id);
+        //         const averageRatingsData = await Promise.all(
+        //             objects.map(async objectId => {
+        //                 const avgRatingData = await fetch(`http://localhost:8080/reviews/rating/${objectId}`);
+        //                 const avgRating = await avgRatingData.json();
+        //                 return { objectId, avgRating };
+        //             })
+        //         );
+        //
+        //         const averageRatingsMap = {};
+        //         averageRatingsData.forEach(item => {
+        //             averageRatingsMap[item.objectId] = item.avgRating;
+        //         });
+        //
+        //         setAverageRatings(averageRatingsMap);
+        //     } catch (error) {
+        //         console.error('Error fetching average ratings:', error);
+        //     }
+        // };
 
         // Fetch user ratings and average ratings
         // fetchUserRatings();
@@ -290,18 +303,26 @@ const Home = () => {
 
             </div>
 
-            <div id="plan-route-button">
-                <button onClick={openSidebar}>My Route</button>
-                {isSidebarOpen && (
-                    <RoutePlannerSidebar
-                        onClose={closeSidebar}
-                        addToRoute={handleAddToRoute}
-                        routeSites={routeSites}
-                        removeFromRoute={handleRemoveFromRoute}
-                        updateRouteSites={handleAddToRoute()}
-                    />
-                )}
-            </div>
+
+                <div id="plan-route-button">
+                    <button onClick={openSidebar}>My Route</button>
+                    {isSidebarOpen && (
+                        <RouteContext.Provider value={{routeSites, setRouteSites}}>
+                            <RoutePlannerSidebar
+                                onClose={closeSidebar}
+                                handleAddToRoute={handleAddToRoute}
+                                // routeSites={routeSites}
+                                removeFromRoute={handleRemoveFromRoute}
+                                // updateRouteSites={handleAddToRoute}
+                                // updateRouteSites={setRouteSites}
+                                reload={reload}
+                                userLocation={userLocation}
+                                setUserLocation={setUserLocation}
+                            />
+                        </RouteContext.Provider>
+                    )}
+                </div>
+
 
             <MarkerClusterGroup chunkedLoading>
                 {state.map((obj, index) => (
@@ -342,6 +363,7 @@ const Home = () => {
                                            index={index}
                                            setAverageRatings={setAverageRatings}
                                            setRouteSites={setRouteSites}
+                                           handleAddToRoute={handleAddToRoute}
                                 />
                             </StateContext.Provider>
                         </Popup>

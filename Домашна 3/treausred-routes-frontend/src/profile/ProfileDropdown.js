@@ -11,7 +11,6 @@ const ProfileDropdown = () => {
         setIsOpen(!isOpen);
     };
 
-
     const [profilePicture, setProfilePicture] = useState("");
 
     useEffect(() => {

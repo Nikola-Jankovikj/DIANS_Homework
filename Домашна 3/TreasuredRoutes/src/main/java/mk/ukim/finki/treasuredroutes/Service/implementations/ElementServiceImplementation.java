@@ -68,4 +68,10 @@ public class ElementServiceImplementation implements ElementService {
     public List<Element> findByName(String name) {
         return elementRepository.findAll().stream().filter(element -> element.getName().strip().equalsIgnoreCase(name)).collect(Collectors.toList());
     }
+
+    @Override
+    public Element addUserLocation(Double latitude, Double longitude) {
+        Element userLocation = new Element("0", "User", "User", latitude.toString(), longitude.toString());
+        return elementRepository.save(userLocation);
+    }
 }

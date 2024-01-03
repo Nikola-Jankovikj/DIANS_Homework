@@ -1,31 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import './RoutePlannerSidebar.css';
 import Routing from './Routing';
 import {getUserLocation} from "../utils/routing_utils";
+import {RouteContext, UserLocationContext} from "../Home";
 
-const RoutePlannerSidebar = ({ onClose, removeFromRoute, updateRouteSites, handleAddToRoute }) => {
-    const [routeSites, setRouteSites] = useState([]);
+const RoutePlannerSidebar = ({ onClose, handleAddToRoute, setUserLocation, reload }) => {
+
+    const {routeSites, setRouteSites} = useContext(RouteContext)
+
     const [isRoutingVisible, setIsRoutingVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
-    const handleDeleteSite = async (siteId) => {
-        try {
-            const response = await fetch(`http://localhost:8080/route/delete/${siteId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+    const addUserLocationToRoute = (location) => {
+        let userObj = {id: "0", name: "user", type: "user", lat: location[0].toString(), lon: location[1].toString()}
+        setRouteSites((prevSites) => [userObj, ...prevSites])
+    }
 
-            if (response.ok) {
-                console.log(`Site with ID ${siteId} deleted from the route on the backend.`);
-                setRouteSites((prevSites) => prevSites.filter((site) => site.id !== siteId));
-            } else {
-                console.error(`Failed to delete site with ID ${siteId} from the route on the backend.`);
+    const findMe = async () => {
+        console.log("ROUTE SITES OD 0 E: " + routeSites[0])
+        if (routeSites.length === 0 || routeSites[0].name !== 'user') {
+            setIsLoading(true)
+            try{
+                const location = await getUserLocation()
+                await addUserLocationToRoute(location)
+                await setUserLocation(location)
+                setIsLoading(false)
+            } catch (error){
+                console.log("Error in findMe:", error)
             }
-        } catch (error) {
-            console.error('Error deleting site from the route:', error);
         }
+    };
+
+    const handleDeleteSite = async (siteId) => {
+        setRouteSites((prevSites) => prevSites.filter((site) => site.id !== siteId));
     };
 
     const handleToggleRouting = () => {
@@ -33,42 +40,14 @@ const RoutePlannerSidebar = ({ onClose, removeFromRoute, updateRouteSites, handl
     };
 
     useEffect(() => {
-        const fetchRouteSites = async () => {
-            try {
-                console.log('Fetching route sites...');
-                const response = await fetch('http://localhost:8080/route/all');
+        setIsLoading(false);
+    }, [])
 
-                if (!response.ok) {
-                    // Handle non-successful response (e.g., 404 Not Found)
-                    throw new Error(`Failed to fetch route sites (HTTP ${response.status})`);
-                }
-
-                getUserLocation()
-                    .then((coordinates) => {
-                        console.log("User location:", coordinates);
-                        finalData.push()
-                    })
-                    .catch((error) => {
-                        console.error("Error getting user location:", error);
-                    });
-
-                const data = await response.json();
-                setRouteSites(data);
-                setIsLoading(false);
-            } catch (error) {
-                console.error('Error fetching route sites:', error);
-                setIsLoading(false);
-                // Handle the error state here (e.g., display an error message to the user)
-            }
-        };
-
-        // Fetch data when the component mounts
-        fetchRouteSites();
-    }, [updateRouteSites]);
     useEffect(() => {
         // Add any additional logic you want to execute when routeSites changes
         console.log('Route sites updated:', routeSites);
     }, [handleAddToRoute]);
+
 
     return (
         <div className="route-planner-sidebar">
@@ -78,8 +57,8 @@ const RoutePlannerSidebar = ({ onClose, removeFromRoute, updateRouteSites, handl
             </p>
             <ul className="site-list">
                 {isLoading ? (
-                    <p>Loading...</p>
-                ) : routeSites.at(0) !== null ? (
+                    <div className="loader"></div>
+                ) : routeSites[0] !== null ? (
                     routeSites.map((site, index) => (
                         <li key={site.id} className={`site-list-item ${index === 0 ? 'starting-location' : ''}`}>
                             <span className="site-name">{index === 0 ? 'Starting Location: ' : ''}{site.name}</span>
@@ -92,6 +71,7 @@ const RoutePlannerSidebar = ({ onClose, removeFromRoute, updateRouteSites, handl
                     <p>No sites in the route.</p>
                 )}
             </ul>
+            <button onClick={findMe}>Find Me</button>
             <button onClick={onClose}>Close</button>
             <button onClick={handleToggleRouting}>
                 {isRoutingVisible ? 'Hide Routing' : 'Show Routing'}
