@@ -11,8 +11,6 @@ const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRou
 
     const state = useContext(StateContext);
 
-    // const [userRatings, setUserRatings] = useState({});
-    // const [favoritedStates, setFavoritedStates] = useState([]);
 
     useEffect(  () => {
         fetch(`http://localhost:8080/favorites/check/${obj.id}`, {
@@ -69,18 +67,8 @@ const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRou
             setFavorite(newFavoriteState)
 
             if (!response.ok) {
-                // setFavoritedStates(prevStates => {
-                //     const newStates = [...prevStates];
-                //     const index = state.findIndex(obj => obj.id === objectId);
-                //     newStates[index] = !newStates[index];
-                //     return newStates;
-                // });
-
                 console.error('Failed to toggle favorites');
             }
-            // else {
-            //     console.error('Failed to toggle favorites');
-            // }
         } catch (error) {
             console.error('Error:', error);
         }
@@ -97,21 +85,12 @@ const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRou
             });
 
             if (response.ok) {
-                // Update user ratings
-                // setUserRatings(prevRatings => ({
-                //     ...prevRatings,
-                //     [objectId]: rating,
-                // }));
                 setMyRating(rating)
 
                 // Fetch and update average ratings
                 const avgRatingResponse = await fetch(`http://localhost:8080/reviews/rating/${objectId}`);
                 const avgRating = await avgRatingResponse.json();
 
-                // setAverageRatings(prevAvgRatings => ({
-                //     ...prevAvgRatings,
-                //     [objectId]: avgRating,
-                // }));
                 setAverageRating(avgRating)
             } else {
                 console.error('Failed to add review');
@@ -120,29 +99,6 @@ const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRou
             console.error('Error:', error);
         }
     };
-
-    // const handleAddToRoute = async (site) => {
-    //     try {
-    //         // Send a POST request to the backend to add the site to the route
-    //         const response = await fetch('http://localhost:8080/route/add', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify({ siteId: site.id }), // Pass the site ID to the backend
-    //         });
-    //
-    //         if (response.ok) {
-    //             console.log(`Site ${site.name} added to the route on the backend.`);
-    //             // Update the routeSites state if needed
-    //             setRouteSites((prevSites) => [...prevSites, site]);
-    //         } else {
-    //             console.error('Failed to add site to the route on the backend.');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error adding site to the route:', error);
-    //     }
-    // };
     
     return (
         <div className="card">
