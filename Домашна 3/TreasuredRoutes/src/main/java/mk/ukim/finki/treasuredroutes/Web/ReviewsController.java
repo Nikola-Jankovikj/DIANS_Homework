@@ -1,7 +1,6 @@
 package mk.ukim.finki.treasuredroutes.Web;
 
 import jakarta.servlet.http.HttpServletRequest;
-import mk.ukim.finki.treasuredroutes.Model.Element;
 import mk.ukim.finki.treasuredroutes.Model.Review;
 import mk.ukim.finki.treasuredroutes.Model.User;
 import mk.ukim.finki.treasuredroutes.Service.ReviewsService;
@@ -10,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @Validated

@@ -1,6 +1,5 @@
 package mk.ukim.finki.treasuredroutes.Web;
 
-import jakarta.servlet.http.HttpServletRequest;
 import mk.ukim.finki.treasuredroutes.Model.Element;
 import mk.ukim.finki.treasuredroutes.Service.ElementService;
 import org.springframework.http.HttpStatus;

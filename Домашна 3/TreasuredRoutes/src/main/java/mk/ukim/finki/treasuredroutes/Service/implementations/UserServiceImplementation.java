@@ -12,7 +12,6 @@ import mk.ukim.finki.treasuredroutes.Service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServiceImplementation implements UserService {
@@ -35,7 +34,7 @@ public class UserServiceImplementation implements UserService {
 
     @Override
 
-    public User changeEmailAddress(String newEmail, Long id) throws UserNotFoundException, EmailInUseException, EmailDoesNotExist {
+    public User changeEmailAddress(String newEmail, Long id) throws UserNotFoundException, EmailInUseException {
         User user = userRepository.findByEmail(newEmail).orElse(null);
 
         if (user!=null) {
@@ -56,15 +55,8 @@ public class UserServiceImplementation implements UserService {
         return userRepository.findByEmail(email).orElseThrow(EmailDoesNotExist::new);
     }
 
-//    @Override
-//    public void setProfilePicture(String picturePath, Long id) throws UserNotFoundException {
-//        User updatedUser = findById(id);
-//        updatedUser.setProfilePicture("images/"+picturePath);
-//        userRepository.save(updatedUser);
-//
-//    }
     @Override
-    public User changePassword(String newPassword, Long id) throws UserNotFoundException, EmailInUseException{
+    public User changePassword(String newPassword, Long id) throws UserNotFoundException{
         User user = findById(id);
 
         user.setPassword(newPassword);

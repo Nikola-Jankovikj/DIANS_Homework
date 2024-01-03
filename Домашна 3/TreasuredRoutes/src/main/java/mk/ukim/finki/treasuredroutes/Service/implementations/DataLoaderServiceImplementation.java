@@ -1,7 +1,6 @@
 package mk.ukim.finki.treasuredroutes.Service.implementations;
 
 import mk.ukim.finki.treasuredroutes.Model.Element;
-import mk.ukim.finki.treasuredroutes.Model.User;
 import mk.ukim.finki.treasuredroutes.Repository.ElementRepository;
 import mk.ukim.finki.treasuredroutes.Repository.UserRepository;
 import mk.ukim.finki.treasuredroutes.Service.DataLoaderService;
