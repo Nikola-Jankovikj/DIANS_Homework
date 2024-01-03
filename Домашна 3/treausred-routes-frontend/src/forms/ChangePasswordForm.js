@@ -18,6 +18,7 @@ const ChangePasswordForm = () => {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
+                    'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
                 },
                 body: JSON.stringify({
                     currentPassword,

@@ -16,6 +16,7 @@ const Favorites = (state) => {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
                 },
                 credentials: "include",
             });
@@ -24,13 +25,18 @@ const Favorites = (state) => {
                 const data = await response.json();
 
                 const favoritesWithRatingsPromises = data.map(async (favorite) => {
-                    const ratingResponse = await fetch(`http://localhost:8080/reviews/rating/${favorite.id}`);
+                    const ratingResponse = await fetch(`http://localhost:8080/reviews/rating/${favorite.id}`, {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
+                        }
+                    });
                     const ratingData = await ratingResponse.json();
 
                     const userRatingResponse = await fetch(`http://localhost:8080/reviews/userRating/${favorite.id}`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
                         },
                         credentials: "include",
                     });
@@ -43,6 +49,7 @@ const Favorites = (state) => {
 
                 setFavorites(favoritesWithRatings);
             } else {
+                navigate("/login")
                 console.error('Failed to fetch favorites:', response.statusText);
             }
         } catch (error) {
@@ -55,6 +62,7 @@ const Favorites = (state) => {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
             },
             credentials: "include",
             body: JSON.stringify({ objectId }),
@@ -79,6 +87,7 @@ const Favorites = (state) => {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
                 },
                 credentials: "include",
             });

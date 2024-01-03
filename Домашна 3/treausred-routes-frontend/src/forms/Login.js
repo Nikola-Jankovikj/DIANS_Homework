@@ -1,6 +1,7 @@
 import "./LoginAndRegister.css"
 import React, { useState } from "react";
 import { useNavigate} from "react-router-dom";
+import browser from "leaflet/src/core/Browser";
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -11,12 +12,12 @@ const Login = () => {
     const navigateHome = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch("http://localhost:8080/login", {
+            const response = await fetch("http://localhost:8080/auth/authenticate", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Content-Type": "application/json",
                 },
-                body: new URLSearchParams({
+                body: JSON.stringify({
                     email: email,
                     password: password,
                 }),
@@ -24,10 +25,12 @@ const Login = () => {
             });
 
             if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem("jwtToken", data.token)
                 navigate("/home");
             } else {
                 const errorData = await response.json();
-                setError(errorData.info);
+                setError(errorData.token);
                 console.error(errorData);
             }
         } catch (error) {

@@ -1,9 +1,11 @@
 import {useEffect, useState} from "react";
 import {calculateNewCenter, fetchData, getBoundingBox} from "../utils/search_utils";
+import {useNavigate} from "react-router-dom";
 
 const SearchComponent = ({updateMarkers, focusTarget, focusMap}, initialCenter) => {
 
     var objsForFocus = []
+    const navigate = useNavigate()
 
     const setObjsForFocus = (data) => {
         objsForFocus = data
@@ -17,11 +19,15 @@ const SearchComponent = ({updateMarkers, focusTarget, focusMap}, initialCenter) 
     }
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/search?query=${query}`)
+        fetch(`http://localhost:8080/api/search?query=${query}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
+            }
+        })
             .then(response => response.json())
             .then(suggestions => {
                 setSuggestions(suggestions);
-            })
+            }).catch(() => navigate("/login"))
     }, [query]);
 
     const selectSuggestion = (element) => {

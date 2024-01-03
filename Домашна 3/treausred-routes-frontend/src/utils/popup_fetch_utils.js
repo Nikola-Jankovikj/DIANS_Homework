@@ -2,7 +2,8 @@ export function fetchFavorite (obj, setFavorite) {
     fetch(`http://localhost:8080/favorites/check/${obj.id}`, {
         method: 'GET',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
         },
         credentials: 'include',
     }).then((resp) => {
@@ -16,7 +17,8 @@ export function fetchRating  (obj, setAverageRating)  {
     fetch(`http://localhost:8080/reviews/rating/${obj.id}`,{
         method: 'GET',
         headers:{
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
         },
         credentials: 'include'
     }).then((resp) => {
@@ -29,8 +31,9 @@ export function fetchRating  (obj, setAverageRating)  {
 export function fetchUserRating(obj, setMyRating){
     fetch(`http://localhost:8080/reviews/userRating/${obj.id}`,{
         method: 'GET',
-        headers:{
-            'Content-Type': 'application/json'
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
         },
         credentials: 'include'
     }).then((resp) => {

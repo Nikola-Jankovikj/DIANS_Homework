@@ -3,6 +3,7 @@ package mk.ukim.finki.treasuredroutes.Web;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import mk.ukim.finki.treasuredroutes.Model.Exceptions.EmailDoesNotExist;
+import mk.ukim.finki.treasuredroutes.Model.Exceptions.ReviewNotFoundException;
 import mk.ukim.finki.treasuredroutes.Model.Review;
 import mk.ukim.finki.treasuredroutes.Model.User;
 import mk.ukim.finki.treasuredroutes.Service.ReviewsService;
@@ -47,9 +48,14 @@ public class ReviewsController {
         try {
             user = authenticationService.getAuthenticatedUser();
         } catch (EmailDoesNotExist e) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body(0);
         }
-        Integer userRating = reviewsService.getRatingByUserAndElement(user.getId(), elementId);
+        Integer userRating = null;
+        try {
+            userRating = reviewsService.getRatingByUserAndElement(user.getId(), elementId);
+        } catch (ReviewNotFoundException e) {
+            return ResponseEntity.badRequest().body(0);
+        }
         return ResponseEntity.ok(userRating);
     }
 

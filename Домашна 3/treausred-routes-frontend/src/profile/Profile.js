@@ -26,7 +26,7 @@ const Profile = () => {
                 const response = await fetch("http://localhost:8080/user/profile", {
                     method: "GET",
                     headers: {
-
+                        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
                     },
                 });
 
@@ -36,6 +36,7 @@ const Profile = () => {
                     setProfilePicture(data["profile-picture"]);
                 } else {
                     console.error("Error fetching user email");
+                    navigate("/login")
                 }
             } catch (error) {
                 console.error("Error fetching user email", error);
@@ -50,7 +51,7 @@ const Profile = () => {
             const response = await fetch(`http://localhost:8080/user/changemail/${newEmail}`, {
                 method: "PUT",
                 headers: {
-
+                    'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
                 },
             });
 
@@ -60,6 +61,7 @@ const Profile = () => {
                 setEmail(data.newEmail);
                 setNewEmail("");
                 setIsSuccess(true);
+                navigate("/login")
             } else {
                 const errorData = await response.json();
                 setFeedbackMessage(`${errorData.error}`);

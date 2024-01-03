@@ -9,6 +9,7 @@ import mk.ukim.finki.treasuredroutes.Service.UserService;
 import mk.ukim.finki.treasuredroutes.auth.AuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,7 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     private final AuthenticationService authenticationService;
+    private final PasswordEncoder passwordEncoder;
 
     @PutMapping("/changemail/{newEmail}")
     public ResponseEntity<Map<String, String>> changeEmailAddress(@PathVariable String newEmail) {
@@ -70,7 +72,7 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
             }
 
-            if (!currentPassword.equals(user.getPassword())) {
+            if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
                 Map<String, String> errorResponse = new HashMap<>();
                 errorResponse.put("error", "Current password is incorrect!");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);

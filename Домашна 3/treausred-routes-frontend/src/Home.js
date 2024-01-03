@@ -13,6 +13,7 @@ import RoutePlannerSidebar from './routing/RoutePlannerSidebar';
 import "./styles.css";
 import "leaflet/dist/leaflet.css";
 import PopupCard from "./map/PopupCard";
+import {useNavigate} from "react-router-dom";
 
 export const StateContext = createContext();
 export const RouteContext = createContext();
@@ -22,6 +23,8 @@ const Home = () => {
         iconUrl: require('./resources/location-pin.png'),
         iconSize: [38, 38]
     });
+
+    const navigate = useNavigate()
 
     const [reload, setReload] = useState(false);
 
@@ -65,11 +68,17 @@ const Home = () => {
     const [averageRatings, setAverageRatings] = useState({});
 
     useEffect(() => {
-        fetch(url)
+        fetch(url, {
+            method: "GET",
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
+            }
+        })
             .then(response => response.json())
             .then(data => {
                 setState(data);
             })
+            .catch(() => navigate("/login"))
     }, [url]);
 
     const updateMapViaNavButtons = (selectedFilter) => {

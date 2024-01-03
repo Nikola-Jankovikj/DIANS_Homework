@@ -12,12 +12,12 @@ const Register = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch("http://localhost:8080/register", {
+            const response = await fetch("http://localhost:8080/auth/register", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Content-Type": "application/json",
                 },
-                body: new URLSearchParams({
+                body: JSON.stringify({
                     email: email,
                     password: password,
                     confirmPassword: confirmPassword,
@@ -29,7 +29,7 @@ const Register = () => {
                 navigate("/login");
             } else {
                 const errorData = await response.json();
-                setError(errorData.info);
+                setError(errorData.token);
                 console.error(errorData);
             }
         } catch (error) {
@@ -78,7 +78,7 @@ const Register = () => {
                 <button className={"formButton"} type="submit">
                     Register
                 </button>
-                <a href="/src/forms/Login" className={"formAnchor"}>
+                <a href="/Login" className={"formAnchor"}>
                     Already have an account?
                 </a>
             </form>

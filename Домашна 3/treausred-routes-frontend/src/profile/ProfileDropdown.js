@@ -19,7 +19,8 @@ const ProfileDropdown = () => {
                 const response = await fetch("http://localhost:8080/user/profile", {
                     method: "GET",
                     headers: {
-                    },
+                        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
+                    }
                 });
 
                 if (response.ok) {
@@ -37,14 +38,16 @@ const ProfileDropdown = () => {
     }, []);
     const handleLogout = async () => {
         try {
-            const response = await fetch("http://localhost:8080/logout", {
+            const response = await fetch("http://localhost:8080/auth/logout", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
+                    'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
                 },
                 credentials: "include",
             });
             if (response.ok) {
+                localStorage.removeItem("jwtToken")
                 navigate("/login")
             } else {
                 const errorData = await response.json();

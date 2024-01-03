@@ -27,6 +27,7 @@ const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRou
                 method: favorite ? 'DELETE' : 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
                 },
                 credentials: "include",
                 body: JSON.stringify({ objectId }),
@@ -49,6 +50,7 @@ const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRou
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
                 },
                 credentials: "include",
             });
@@ -56,7 +58,11 @@ const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRou
             if (response.ok) {
                 setMyRating(rating)
 
-                const avgRatingResponse = await fetch(`http://localhost:8080/reviews/rating/${objectId}`);
+                const avgRatingResponse = await fetch(`http://localhost:8080/reviews/rating/${objectId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
+                    }
+                });
                 const avgRating = await avgRatingResponse.json();
 
                 setAverageRating(avgRating)

@@ -6,6 +6,7 @@ import mk.ukim.finki.treasuredroutes.Model.Exceptions.InvalidArgumentsException;
 import mk.ukim.finki.treasuredroutes.Model.Exceptions.PasswordsDoNotMatchException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,5 +35,11 @@ public class AuthenticationController {
         } catch (InvalidArgumentsException | AuthenticationException e ) {
             return ResponseEntity.badRequest().body(new AuthenticationResponse(e.getMessage()));
         }
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<String> logout() {
+        SecurityContextHolder.clearContext();
+        return ResponseEntity.ok("Logged out");
     }
 }

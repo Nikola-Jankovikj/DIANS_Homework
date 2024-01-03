@@ -7,10 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ReviewsRepository extends JpaRepository<Review, Long> {
     List<Review> findByUser(User user);
     List<Review> findByElement(Element element);
-    Review findByUserAndElement(User user, Element element);
+    Optional<Review> findByUserAndElement(User user, Element element);
 }

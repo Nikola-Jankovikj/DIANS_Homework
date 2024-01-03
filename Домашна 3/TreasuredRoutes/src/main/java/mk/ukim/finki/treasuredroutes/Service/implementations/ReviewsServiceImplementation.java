@@ -1,6 +1,7 @@
 package mk.ukim.finki.treasuredroutes.Service.implementations;
 
 import mk.ukim.finki.treasuredroutes.Model.Element;
+import mk.ukim.finki.treasuredroutes.Model.Exceptions.ReviewNotFoundException;
 import mk.ukim.finki.treasuredroutes.Model.Review;
 import mk.ukim.finki.treasuredroutes.Model.User;
 import mk.ukim.finki.treasuredroutes.Repository.ElementRepository;
@@ -30,8 +31,9 @@ public class ReviewsServiceImplementation implements ReviewsService {
         User user = userRepository.findById(userId).orElse(null);
         Element element = elementRepository.findById(elementId).orElse(null);
         Review review = new Review(user, element, rating);
-        if (reviewsRepository.findByUserAndElement(user, element) != null) {
-            review = reviewsRepository.findByUserAndElement(user, element);
+        Review existing = reviewsRepository.findByUserAndElement(user, element).orElse(null);
+        if (existing != null) {
+            review = existing;
             review.setRating(rating);
         }
         reviewsRepository.save(review);
@@ -41,7 +43,7 @@ public class ReviewsServiceImplementation implements ReviewsService {
     public void removeReview(Long userId, Long elementId) {
         User user = userRepository.findById(userId).orElse(null);
         Element element = elementRepository.findById(elementId).orElse(null);
-        Review review = reviewsRepository.findByUserAndElement(user, element);
+        Review review = reviewsRepository.findByUserAndElement(user, element).orElse(null);
         reviewsRepository.delete(review);
     }
 
@@ -62,9 +64,11 @@ public class ReviewsServiceImplementation implements ReviewsService {
     }
 
     @Override
-    public int getRatingByUserAndElement(Long userId, Long elementId) {
+    public int getRatingByUserAndElement(Long userId, Long elementId) throws ReviewNotFoundException {
         User user = userRepository.findById(userId).orElse(null);
         Element element = elementRepository.findById(elementId).orElse(null);
-        return reviewsRepository.findByUserAndElement(user, element).getRating();
+        Review review = reviewsRepository.findByUserAndElement(user, element)
+                .orElseThrow(ReviewNotFoundException::new);
+        return review.getRating();
     }
 }
