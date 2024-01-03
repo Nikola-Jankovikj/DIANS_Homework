@@ -7,6 +7,7 @@ import Register from "./forms/Register";
 import Favorites from "./favorites/Favorites";
 import Profile from "./profile/Profile"
 import ChangePasswordForm from "./forms/ChangePasswordForm";
+import NotFound from "./errorPage/NotFound";
 
 
 function App() {
@@ -21,6 +22,8 @@ function App() {
                 <Route path="/profile" Component={Profile} />
                 <Route path="/favorites" Component={Favorites} />
                 <Route path="/change-password" Component={ChangePasswordForm} />
+
+                <Route path={"/*"} Component={NotFound}/>
             </Routes>
         </Router>
     );

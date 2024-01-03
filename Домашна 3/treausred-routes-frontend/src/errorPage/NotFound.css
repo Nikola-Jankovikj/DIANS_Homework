@@ -1,0 +1,29 @@
+#notFoundDiv {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+#notFoundDiv section {
+    padding: 40px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#notFoundDiv h1 {
+    color: #ff6347; /* Tomato color */
+}
+
+#notFoundDiv h3 {
+    color: #333;
+}
+
+#notFoundDiv p {
+    color: #555;
+    margin-bottom: 20px;
+}
