@@ -1,0 +1,54 @@
+.parentForm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f2f2f2;
+}
+
+.actualForm {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.formLabel {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.formInput {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+}
+
+.formButton {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.formButton:hover {
+    background-color: #45a049;
+}
+
+.formAnchor {
+    display: block;
+    text-align: center;
+    margin-top: 16px;
+    text-decoration: none;
+    color: #007bff;
+}
+
+.formAnchor:hover {
+    text-decoration: underline;
+}
