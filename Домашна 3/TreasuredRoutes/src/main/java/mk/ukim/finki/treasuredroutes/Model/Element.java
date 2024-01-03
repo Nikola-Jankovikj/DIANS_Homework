@@ -1,13 +1,11 @@
 package mk.ukim.finki.treasuredroutes.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Collection;
 
 @Data
 @Entity
@@ -27,15 +25,4 @@ public class Element implements Serializable {
         return String.format("%s, %s, %s, %s, %s", id, name, type, lat, lon);
     }
 
-    @ManyToMany(mappedBy = "RouteSites")
-    @JsonIgnore
-    private Collection<Route> routes;
-
-    public Element(String id, String name, String type, String lat, String lon) {
-        this.id = id;
-        this.name = name;
-        this.type = type;
-        this.lat = lat;
-        this.lon = lon;
-    }
 }

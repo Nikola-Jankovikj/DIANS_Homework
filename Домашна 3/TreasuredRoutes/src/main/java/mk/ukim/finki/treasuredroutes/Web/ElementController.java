@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -55,6 +56,13 @@ public class ElementController {
     @GetMapping("/search/{name}")
     public ResponseEntity<List<Element>> findElement(@PathVariable String name){
         return new ResponseEntity<>(elementService.findByName(name), HttpStatus.OK);
+    }
+
+    @PutMapping("/add/user")
+    public ResponseEntity<Element> addUserLocation(@RequestBody Map<String, Double> body){
+        Double latitude = body.get("latitude");
+        Double longitude = body.get("longitude");
+        return new ResponseEntity<>(elementService.addUserLocation(latitude, longitude), HttpStatus.OK);
     }
 
 

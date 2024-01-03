@@ -41,6 +41,14 @@ public class FavoritesServiceImplementation implements FavoritesService {
     }
 
     @Override
+    public boolean isElementFavorited(Long userId, Long elementId) {
+        User user = userRepository.findById(userId).orElse(null);
+        Element element = elementRepository.findById(elementId).orElse(null);
+        Favorite favorite = favoritesRepository.findByUserAndElement(user, element);
+        return favorite != null;
+    }
+
+    @Override
     public List<Element> getUserFavorites(Long userId) {
         User user = userRepository.findById(userId).orElse(null);
         List<Favorite> favorites = favoritesRepository.findByUser(user);

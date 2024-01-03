@@ -2,6 +2,7 @@ package mk.ukim.finki.treasuredroutes.Web;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class LogoutController {
 
     @GetMapping
-    public ResponseEntity<String > logout(HttpServletRequest request) {
-        request.getSession().invalidate();
+    public ResponseEntity<String > logout() {
+        SecurityContextHolder.clearContext();
         return ResponseEntity.ok("{\"info\": \"Logout successful\"}");
     }
 }

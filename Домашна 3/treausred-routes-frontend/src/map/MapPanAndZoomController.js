@@ -24,8 +24,6 @@ const MapPanAndZoomController = forwardRef((props, ref) => {
     }
 
     const focusWholeMap = (coordinates) => {
-        // var bounds = latLngBounds(coordinates)
-        // console.log("BOUNDS INSIDE CONTROLLER: "+bounds)
         myMap.fitBounds(coordinates)
     }
 

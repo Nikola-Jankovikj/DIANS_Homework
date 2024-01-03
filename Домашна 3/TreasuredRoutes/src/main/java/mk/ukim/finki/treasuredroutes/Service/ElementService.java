@@ -18,4 +18,6 @@ public interface ElementService {
 
     List<Element> findByName(String name);
 
+    Element addUserLocation(Double latitude, Double longitude);
+
 }

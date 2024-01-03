@@ -9,18 +9,20 @@ import mk.ukim.finki.treasuredroutes.Model.Exceptions.*;
 import mk.ukim.finki.treasuredroutes.Model.User;
 import mk.ukim.finki.treasuredroutes.Repository.UserRepository;
 import mk.ukim.finki.treasuredroutes.Service.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServiceImplementation implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImplementation(UserRepository userRepository) {
+    public UserServiceImplementation(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class UserServiceImplementation implements UserService {
 
     @Override
 
-    public User changeEmailAddress(String newEmail, Long id) throws UserNotFoundException, EmailInUseException, EmailDoesNotExist {
+    public User changeEmailAddress(String newEmail, Long id) throws UserNotFoundException, EmailInUseException {
         User user = userRepository.findByEmail(newEmail).orElse(null);
 
         if (user!=null) {
@@ -57,47 +59,10 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public void setProfilePicture(String picturePath, Long id) throws UserNotFoundException {
-        User updatedUser = findById(id);
-        updatedUser.setProfilePicture("images/"+picturePath);
-        userRepository.save(updatedUser);
-
-    }
-    @Override
-    public User changePassword(String newPassword, Long id) throws UserNotFoundException, EmailInUseException{
+    public User changePassword(String newPassword, Long id) throws UserNotFoundException{
         User user = findById(id);
-
+        newPassword = passwordEncoder.encode(newPassword);
         user.setPassword(newPassword);
         return userRepository.save(user);
     }
-
-    public User login(String email, String password) throws InvalidArgumentsException, InvalidUserCredentialsException {
-        if (email == null || password == null || email.isBlank() || password.isBlank()) {
-            throw new InvalidArgumentsException();
-        }
-
-        return userRepository.findByEmailAndPassword(email, password)
-                .orElseThrow(InvalidUserCredentialsException::new);
-    }
-
-
-    @Override
-    public User register(String email, String password, String confirmPassword) throws InvalidArgumentsException, PasswordsDoNotMatchException, EmailAlreadyExistsException {
-        if (email == null || password == null || email.isBlank() || password.isBlank()) {
-            throw new InvalidArgumentsException();
-        }
-
-        if (!password.equals(confirmPassword)) {
-            throw new PasswordsDoNotMatchException();
-        }
-
-        if(this.userRepository.findByEmail(email).isPresent()) {
-            throw new EmailAlreadyExistsException();
-        }
-
-        User user = new User(email, password);
-        return userRepository.save(user);
-    }
-
-
 }

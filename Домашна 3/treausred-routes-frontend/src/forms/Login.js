@@ -1,39 +1,37 @@
 import "./LoginAndRegister.css"
 import React, { useState } from "react";
 import { useNavigate} from "react-router-dom";
+import browser from "leaflet/src/core/Browser";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState(""); // Added state for error message
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
     const navigateHome = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch("http://localhost:8080/login", {
+            const response = await fetch("http://localhost:8080/auth/authenticate", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Content-Type": "application/json",
                 },
-                body: new URLSearchParams({
+                body: JSON.stringify({
                     email: email,
                     password: password,
                 }),
-                credentials: "include", // Include cookies in the request
+                credentials: "include",
             });
 
             if (response.ok) {
-                // Successfully logged in
                 const data = await response.json();
-                console.log(data); // Log the response from the server
-                console.log("SUCCESSFUL")
+                localStorage.setItem("jwtToken", data.token)
                 navigate("/home");
             } else {
-                // Handle login failure
                 const errorData = await response.json();
-                setError(errorData.info);
-                console.error(errorData); // Log the error from the server
+                setError(errorData.token);
+                console.error(errorData);
             }
         } catch (error) {
             console.error("Error during login:", error);
@@ -64,7 +62,7 @@ const Login = () => {
                 <button className={"formButton"} type="submit">
                     Log in
                 </button>
-                <a href="/register" className={"formAnchor"}>
+                <a href="/Register" className={"formAnchor"}>
                     Don't have an account?
                 </a>
             </form>

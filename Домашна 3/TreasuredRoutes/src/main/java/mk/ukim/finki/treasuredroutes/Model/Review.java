@@ -3,8 +3,6 @@ package mk.ukim.finki.treasuredroutes.Model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mk.ukim.finki.treasuredroutes.Model.Element;
-import mk.ukim.finki.treasuredroutes.Model.User;
 
 @Data
 @NoArgsConstructor

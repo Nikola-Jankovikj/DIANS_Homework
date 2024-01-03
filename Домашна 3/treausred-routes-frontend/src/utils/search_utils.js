@@ -12,8 +12,7 @@ export function calculateNewCenter (objs, defaultCenter) {
     const latitutes = objs.map((el) => parseFloat(el.lat))
     const longitutes = objs.map((el) => parseFloat(el.lon))
 
-    const latLonArray = latitutes.map((lat, index) => [lat, longitutes[index]])
-    return latLonArray
+    return latitutes.map((lat, index) => [lat, longitutes[index]])
 }
 
 export function getBoundingBox(coordinates) {
@@ -40,7 +39,11 @@ export function getBoundingBox(coordinates) {
 }
 
 export async function fetchData (url, callbackForSet)  {
-      await fetch(url)
+      await fetch(url, {
+          headers: {
+              'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
+          }
+      })
         .then(data => data.json())
         .then(data => {
             callbackForSet(data)

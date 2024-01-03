@@ -21,12 +21,5 @@ public interface UserService {
 
     User findByEmail(String email) throws EmailDoesNotExist;
 
-    void setProfilePicture(String picturePath, Long id) throws UserNotFoundException;
-
     User changePassword(String newPassword, Long id) throws UserNotFoundException, EmailInUseException;
-
-
-    User login(String email, String password) throws InvalidArgumentsException, InvalidUserCredentialsException;
-    User register(String email, String password, String confirmPassword) throws InvalidArgumentsException, PasswordsDoNotMatchException, EmailAlreadyExistsException;
-
 }

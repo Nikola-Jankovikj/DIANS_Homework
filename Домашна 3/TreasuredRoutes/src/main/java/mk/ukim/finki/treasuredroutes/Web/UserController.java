@@ -1,18 +1,18 @@
 package mk.ukim.finki.treasuredroutes.Web;
 
+import lombok.RequiredArgsConstructor;
 import mk.ukim.finki.treasuredroutes.Model.Exceptions.EmailDoesNotExist;
 import mk.ukim.finki.treasuredroutes.Model.Exceptions.EmailInUseException;
 import mk.ukim.finki.treasuredroutes.Model.Exceptions.UserNotFoundException;
 import mk.ukim.finki.treasuredroutes.Model.User;
 import mk.ukim.finki.treasuredroutes.Service.UserService;
+import mk.ukim.finki.treasuredroutes.auth.AuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,40 +20,22 @@ import java.util.Map;
 @Validated
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
-    private static final String UPLOAD_FOLDER = "/Users/todor/Desktop/credentials/Домашна 3/treausred-routes-frontend/public/images";
-
-    @PostMapping("/upload-profile-picture")
-    public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("Please select a file to upload");
-        }
-
-        try {
-            byte[] bytes = file.getBytes();
-            String filePath = UPLOAD_FOLDER + File.separator + file.getOriginalFilename();
-
-            File dest = new File(filePath);
-            file.transferTo(dest);
-            userService.setProfilePicture(file.getOriginalFilename(), 1L);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body("File uploaded successfully!");
-        } catch (IOException | UserNotFoundException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file");
-        }
-    }
+    private final AuthenticationService authenticationService;
+    private final PasswordEncoder passwordEncoder;
 
     @PutMapping("/changemail/{newEmail}")
     public ResponseEntity<Map<String, String>> changeEmailAddress(@PathVariable String newEmail) {
+        User user;
         try {
-            User updatedUser = userService.changeEmailAddress(newEmail, 1L);
+            user = authenticationService.getAuthenticatedUser();
+        } catch (EmailDoesNotExist e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+        try {
+            User updatedUser = userService.changeEmailAddress(newEmail, user.getId());
 
             Map<String, String> response = new HashMap<>();
             response.put("message", "Email changed successfully!");
@@ -71,8 +53,14 @@ public class UserController {
 
     @PutMapping("/changepassword")
     public ResponseEntity<Map<String, String>> changePassword(@RequestBody Map<String, String> passwordData) {
+        User user;
         try {
-            Long userId = 1L;
+            user = authenticationService.getAuthenticatedUser();
+        } catch (EmailDoesNotExist e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+        try {
+            Long userId = user.getId();
 
             String currentPassword = passwordData.get("currentPassword");
             String newPassword = passwordData.get("newPassword");
@@ -84,8 +72,7 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
             }
 
-            User user = userService.findById(userId);
-            if (!currentPassword.equals(user.getPassword())) {
+            if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
                 Map<String, String> errorResponse = new HashMap<>();
                 errorResponse.put("error", "Current password is incorrect!");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
@@ -111,19 +98,18 @@ public class UserController {
 
     @GetMapping("/profile")
     public ResponseEntity<Map<String, String>> getUserEmail() {
+        User user;
         try {
-            User user = userService.findById(1L);
-
-            Map<String, String> response = new HashMap<>();
-            response.put("email", user.getEmail());
-            response.put("password", user.getPassword());
-            response.put("profile-picture", user.getProfilePicture());
-
-            return ResponseEntity.ok(response);
-        } catch (UserNotFoundException e) {
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("error", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+            user = authenticationService.getAuthenticatedUser();
+        } catch (EmailDoesNotExist e) {
+            return ResponseEntity.badRequest().body(null);
         }
+
+        Map<String, String> response = new HashMap<>();
+        response.put("email", user.getEmail());
+        response.put("password", user.getPassword());
+        response.put("profile-picture", user.getProfilePicture());
+
+        return ResponseEntity.ok(response);
     }
 }
