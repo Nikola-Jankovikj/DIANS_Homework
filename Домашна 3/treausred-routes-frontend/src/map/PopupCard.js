@@ -96,12 +96,11 @@ const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRou
                     </span>
                 ))}
                 <span className="averageRating">
-                    Average:
                     {averageRating && ` ${averageRating.toFixed(1)}`}
                 </span>
             </div>
             <button onClick={() => handleAddToRoute(obj)}>
-                + Add to Route
+                &#x1F697; Add route
             </button>
         </section>
     </div>

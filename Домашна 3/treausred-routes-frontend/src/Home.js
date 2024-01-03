@@ -43,8 +43,11 @@ const Home = () => {
     };
 
     const handleAddToRoute = async (site) => {
-        setRouteSites((prevSites) => [...prevSites, site])
-        handleReload()
+        if(!routeSites.includes(site)){
+            setRouteSites((prevSites) => [...prevSites, site])
+            setSidebarOpen(true)
+            handleReload()
+        }
     };
 
     const handleRemoveFromRoute = (index) => {
@@ -113,6 +116,21 @@ const Home = () => {
                                      focusTarget={focusTarget}
                                      focusMap={focusMap}
                                      initialCenter={initialCenter} />
+                    <div id="plan-route-button">
+                        <button onClick={openSidebar}>My Route</button>
+                        {isSidebarOpen && (
+                            <RouteContext.Provider value={{routeSites, setRouteSites}}>
+                                <RoutePlannerSidebar
+                                    onClose={closeSidebar}
+                                    handleAddToRoute={handleAddToRoute}
+                                    removeFromRoute={handleRemoveFromRoute}
+                                    reload={reload}
+                                    userLocation={userLocation}
+                                    setUserLocation={setUserLocation}
+                                />
+                            </RouteContext.Provider>
+                        )}
+                    </div>
                 </div>
 
                 <div id="nav">
@@ -124,21 +142,6 @@ const Home = () => {
                 </StateContext.Provider>
             </div>
 
-            <div id="plan-route-button">
-                <button onClick={openSidebar}>My Route</button>
-                {isSidebarOpen && (
-                    <RouteContext.Provider value={{routeSites, setRouteSites}}>
-                        <RoutePlannerSidebar
-                            onClose={closeSidebar}
-                            handleAddToRoute={handleAddToRoute}
-                            removeFromRoute={handleRemoveFromRoute}
-                            reload={reload}
-                            userLocation={userLocation}
-                            setUserLocation={setUserLocation}
-                        />
-                    </RouteContext.Provider>
-                )}
-            </div>
 
             <MarkerClusterGroup chunkedLoading>
                 {state.map((obj, index) => (
