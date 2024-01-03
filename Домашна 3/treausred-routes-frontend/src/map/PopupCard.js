@@ -1,6 +1,7 @@
 import {useContext, useEffect, useState} from "react";
 import {StateContext} from "../Home";
 import favorites from "../favorites/Favorites";
+import {fetchFavorite, fetchRating, fetchUserRating} from "../utils/popup_fetch_utils";
 
 const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRoute}) => {
 
@@ -13,42 +14,10 @@ const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRou
 
 
     useEffect(  () => {
-        fetch(`http://localhost:8080/favorites/check/${obj.id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-        }).then((resp) => {
-            resp.json().then((data) => {
-                setFavorite(data)
-            })
-        })
 
-        fetch(`http://localhost:8080/reviews/rating/${obj.id}`,{
-            method: 'GET',
-            headers:{
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-        }).then((resp) => {
-            resp.json().then((data) => {
-                setAverageRating(data)
-            })
-        })
-
-        fetch(`http://localhost:8080/reviews/userRating/${obj.id}`,{
-            method: 'GET',
-            headers:{
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include'
-        }).then((resp) => {
-            resp.json().then((data) => {
-                setMyRating(data)
-            })
-        })
-
+        fetchFavorite(obj, setFavorite)
+        fetchRating(obj, setAverageRating)
+        fetchUserRating(obj, setMyRating)
 
     }, [obj.id] )
 

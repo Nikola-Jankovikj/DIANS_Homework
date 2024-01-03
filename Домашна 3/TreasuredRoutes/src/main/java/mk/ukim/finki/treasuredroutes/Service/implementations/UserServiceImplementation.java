@@ -56,13 +56,13 @@ public class UserServiceImplementation implements UserService {
         return userRepository.findByEmail(email).orElseThrow(EmailDoesNotExist::new);
     }
 
-    @Override
-    public void setProfilePicture(String picturePath, Long id) throws UserNotFoundException {
-        User updatedUser = findById(id);
-        updatedUser.setProfilePicture("images/"+picturePath);
-        userRepository.save(updatedUser);
-
-    }
+//    @Override
+//    public void setProfilePicture(String picturePath, Long id) throws UserNotFoundException {
+//        User updatedUser = findById(id);
+//        updatedUser.setProfilePicture("images/"+picturePath);
+//        userRepository.save(updatedUser);
+//
+//    }
     @Override
     public User changePassword(String newPassword, Long id) throws UserNotFoundException, EmailInUseException{
         User user = findById(id);

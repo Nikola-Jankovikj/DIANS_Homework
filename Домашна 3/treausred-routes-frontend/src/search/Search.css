@@ -55,3 +55,15 @@ button {
 .dropdown-item:hover {
     background-color: #f9f9f9;
 }
+
+.dropdown-item1 {
+    top: 0;
+    display: block;
+    padding: 8px 12px;
+    color: #333;
+    background-color: #f9f9f9;
+    text-decoration: none;
+    cursor: pointer;
+    width: 100%; /* Set width to 100% */
+    box-sizing: border-box; /* Include padding and border in total width */
+}

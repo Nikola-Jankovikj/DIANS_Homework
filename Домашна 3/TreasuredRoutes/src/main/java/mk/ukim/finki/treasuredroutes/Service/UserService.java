@@ -21,7 +21,7 @@ public interface UserService {
 
     User findByEmail(String email) throws EmailDoesNotExist;
 
-    void setProfilePicture(String picturePath, Long id) throws UserNotFoundException;
+//    void setProfilePicture(String picturePath, Long id) throws UserNotFoundException;
 
     User changePassword(String newPassword, Long id) throws UserNotFoundException, EmailInUseException;
 

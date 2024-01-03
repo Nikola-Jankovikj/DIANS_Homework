@@ -27,11 +27,4 @@ public class Element implements Serializable {
         return String.format("%s, %s, %s, %s, %s", id, name, type, lat, lon);
     }
 
-//    public Element(String id, String name, String type, String lat, String lon) {
-//        this.id = id;
-//        this.name = name;
-//        this.type = type;
-//        this.lat = lat;
-//        this.lon = lon;
-//    }
 }

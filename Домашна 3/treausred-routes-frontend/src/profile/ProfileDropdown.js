@@ -85,8 +85,8 @@ const ProfileDropdown = () => {
 
             {isOpen && (
                 <div id="dropdown-menu">
-                    <button className="dropdown-item" onClick={navigateFavorites}>Favorites</button>
-                    <button className="dropdown-item" onClick={navigateAccount}>Account</button>
+                    <button className="dropdown-item1" onClick={navigateFavorites}>Favorites</button>
+                    <button className="dropdown-item1" onClick={navigateAccount}>Account</button>
                     <button className="dropdown-item" onClick={handleLogout}>
                         Log out
                     </button>

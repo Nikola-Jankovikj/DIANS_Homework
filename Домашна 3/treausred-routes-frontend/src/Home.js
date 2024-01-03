@@ -154,29 +154,24 @@ const Home = () => {
                 <StateContext.Provider value={state}>
                     <ProfileDropdown />
                 </StateContext.Provider>
-
-
             </div>
 
 
-                <div id="plan-route-button">
-                    <button onClick={openSidebar}>My Route</button>
-                    {isSidebarOpen && (
-                        <RouteContext.Provider value={{routeSites, setRouteSites}}>
-                            <RoutePlannerSidebar
-                                onClose={closeSidebar}
-                                handleAddToRoute={handleAddToRoute}
-                                // routeSites={routeSites}
-                                removeFromRoute={handleRemoveFromRoute}
-                                // updateRouteSites={handleAddToRoute}
-                                // updateRouteSites={setRouteSites}
-                                reload={reload}
-                                userLocation={userLocation}
-                                setUserLocation={setUserLocation}
-                            />
-                        </RouteContext.Provider>
-                    )}
-                </div>
+            <div id="plan-route-button">
+                <button onClick={openSidebar}>My Route</button>
+                {isSidebarOpen && (
+                    <RouteContext.Provider value={{routeSites, setRouteSites}}>
+                        <RoutePlannerSidebar
+                            onClose={closeSidebar}
+                            handleAddToRoute={handleAddToRoute}
+                            removeFromRoute={handleRemoveFromRoute}
+                            reload={reload}
+                            userLocation={userLocation}
+                            setUserLocation={setUserLocation}
+                        />
+                    </RouteContext.Provider>
+                )}
+            </div>
 
 
             <MarkerClusterGroup chunkedLoading>

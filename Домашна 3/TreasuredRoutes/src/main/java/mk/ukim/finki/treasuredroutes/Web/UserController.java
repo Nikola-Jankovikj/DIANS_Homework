@@ -27,28 +27,28 @@ public class UserController {
         this.userService = userService;
     }
 
-    private static final String UPLOAD_FOLDER = "/Users/todor/Desktop/credentials/Домашна 3/treausred-routes-frontend/public/images";
+//    private static final String UPLOAD_FOLDER = "/Users/todor/Desktop/credentials/Домашна 3/treausred-routes-frontend/public/images";
 
-    @PostMapping("/upload-profile-picture")
-    public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("Please select a file to upload");
-        }
-
-        try {
-            byte[] bytes = file.getBytes();
-            String filePath = UPLOAD_FOLDER + File.separator + file.getOriginalFilename();
-
-            File dest = new File(filePath);
-            file.transferTo(dest);
-            userService.setProfilePicture(file.getOriginalFilename(), 1L);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body("File uploaded successfully!");
-        } catch (IOException | UserNotFoundException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file");
-        }
-    }
+//    @PostMapping("/upload-profile-picture")
+//    public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
+//        if (file.isEmpty()) {
+//            return ResponseEntity.badRequest().body("Please select a file to upload");
+//        }
+//
+//        try {
+//            byte[] bytes = file.getBytes();
+//            String filePath = UPLOAD_FOLDER + File.separator + file.getOriginalFilename();
+//
+//            File dest = new File(filePath);
+//            file.transferTo(dest);
+//            userService.setProfilePicture(file.getOriginalFilename(), 1L);
+//
+//            return ResponseEntity.status(HttpStatus.CREATED).body("File uploaded successfully!");
+//        } catch (IOException | UserNotFoundException e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload file");
+//        }
+//    }
 
     @PutMapping("/changemail/{newEmail}")
     public ResponseEntity<Map<String, String>> changeEmailAddress(@PathVariable String newEmail) {

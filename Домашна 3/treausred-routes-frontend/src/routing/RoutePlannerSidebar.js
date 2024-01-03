@@ -17,7 +17,6 @@ const RoutePlannerSidebar = ({ onClose, handleAddToRoute, setUserLocation, reloa
     }
 
     const findMe = async () => {
-        console.log("ROUTE SITES OD 0 E: " + routeSites[0])
         if (routeSites.length === 0 || routeSites[0].name !== 'user') {
             setIsLoading(true)
             try{
@@ -27,6 +26,7 @@ const RoutePlannerSidebar = ({ onClose, handleAddToRoute, setUserLocation, reloa
                 setIsLoading(false)
             } catch (error){
                 console.log("Error in findMe:", error)
+                setIsLoading(false)
             }
         }
     };
