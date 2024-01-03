@@ -5,7 +5,7 @@ import { useNavigate} from "react-router-dom";
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState(""); // Added state for error message
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
     const navigateHome = async (e) => {
@@ -20,20 +20,15 @@ const Login = () => {
                     email: email,
                     password: password,
                 }),
-                credentials: "include", // Include cookies in the request
+                credentials: "include",
             });
 
             if (response.ok) {
-                // Successfully logged in
-                const data = await response.json();
-                console.log(data); // Log the response from the server
-                console.log("SUCCESSFUL")
                 navigate("/home");
             } else {
-                // Handle login failure
                 const errorData = await response.json();
                 setError(errorData.info);
-                console.error(errorData); // Log the error from the server
+                console.error(errorData);
             }
         } catch (error) {
             console.error("Error during login:", error);

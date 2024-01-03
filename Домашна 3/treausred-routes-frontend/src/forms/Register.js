@@ -6,7 +6,7 @@ const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [error, setError] = useState(""); // Added state for error message
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
     const handleRegister = async (e) => {
@@ -26,12 +26,10 @@ const Register = () => {
             });
 
             if (response.ok) {
-                const data = await response.json();
-                console.log(data);
                 navigate("/login");
             } else {
                 const errorData = await response.json();
-                setError(errorData.info); // Set the error message state
+                setError(errorData.info);
                 console.error(errorData);
             }
         } catch (error) {

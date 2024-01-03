@@ -29,7 +29,7 @@ export default function Routing({ isVisible, routeSites }) {
         const container = routingControl._container;
 
         container.style.position = 'fixed';
-        container.style.bottom = '10px'; // Adjust the bottom value as needed
+        container.style.bottom = '10px';
         container.style.left = '10px';
 
         return () => map.removeControl(routingControl);

@@ -1,17 +1,15 @@
 import { MapContainer, Marker, TileLayer, Popup, ZoomControl } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import React, {createContext, useContext, useEffect, useRef, useState} from "react";
+import React, {createContext, useEffect, useRef, useState} from "react";
 import { Icon } from "leaflet/dist/leaflet-src.esm";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import './map/MapComponent.css';
-import Dropdown from 'react-bootstrap/Dropdown';
 import './search/Search.css';
 import MapPanAndZoomController from "./map/MapPanAndZoomController";
 import NavComponent from "./search/NavComponent";
 import SearchComponent from "./search/SearchComponent";
 import ProfileDropdown from "./profile/ProfileDropdown";
 import RoutePlannerSidebar from './routing/RoutePlannerSidebar';
-import Routing from "./routing/Routing"; // Import the ProfileDropdown component
 import "./styles.css";
 import "leaflet/dist/leaflet.css";
 import PopupCard from "./map/PopupCard";
@@ -28,9 +26,7 @@ const Home = () => {
     const [reload, setReload] = useState(false);
 
     const handleReload = () => {
-        // Toggle the reload state to force a re-render
         setReload((prevReload) => !prevReload);
-        console.log("RELOADED?")
     };
 
     const routePlannerSidebarRef = useRef();
@@ -39,14 +35,12 @@ const Home = () => {
     const [routeSites, setRouteSites] = useState([]);
     const [userLocation, setUserLocation] = useState([])
     const openSidebar = () => {
-        console.log('Button clicked. Opening sidebar...');
         setSidebarOpen(true);
         handleReload()
     };
 
     const handleAddToRoute = async (site) => {
         setRouteSites((prevSites) => [...prevSites, site])
-        console.log("ROUTE SITES ARE: " + routeSites)
         handleReload()
     };
 
@@ -56,8 +50,6 @@ const Home = () => {
 
 
     const closeSidebar = () => {
-        console.log('Button clicked. Closing sidebar...');
-
         setSidebarOpen(false);
     };
 
@@ -77,41 +69,8 @@ const Home = () => {
             .then(response => response.json())
             .then(data => {
                 setState(data);
-                //setFavoritedStates(data.map(obj => obj.isFavorited || false));
             })
     }, [url]);
-
-    useEffect(() => {
-        const fetchUserRatings = async () => {
-            try {
-                const objects = state.map(obj => obj.id);
-                const userRatingsData = await Promise.all(
-                    objects.map(async objectId => {
-                        const userRatingData = await fetch(`http://localhost:8080/reviews/userRating/${objectId}`, {
-                            method: 'GET',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            credentials: "include", // Include cookies in the reques
-                        });
-                        const userRating = await userRatingData.json();
-                        return { objectId, userRating };
-                    })
-                );
-
-                const userRatingsMap = {};
-                userRatingsData.forEach(item => {
-                    userRatingsMap[item.objectId] = item.userRating;
-                });
-
-                setUserRatings(userRatingsMap);
-            } catch (error) {
-                console.error('Error fetching user ratings:', error);
-            }
-        };
-
-    }, [state]); // Fetch ratings whenever the state changes
-
 
     const updateMapViaNavButtons = (selectedFilter) => {
         setUrl(selectedFilter);
@@ -156,7 +115,6 @@ const Home = () => {
                 </StateContext.Provider>
             </div>
 
-
             <div id="plan-route-button">
                 <button onClick={openSidebar}>My Route</button>
                 {isSidebarOpen && (
@@ -172,7 +130,6 @@ const Home = () => {
                     </RouteContext.Provider>
                 )}
             </div>
-
 
             <MarkerClusterGroup chunkedLoading>
                 {state.map((obj, index) => (

@@ -12,8 +12,7 @@ export function calculateNewCenter (objs, defaultCenter) {
     const latitutes = objs.map((el) => parseFloat(el.lat))
     const longitutes = objs.map((el) => parseFloat(el.lon))
 
-    const latLonArray = latitutes.map((lat, index) => [lat, longitutes[index]])
-    return latLonArray
+    return latitutes.map((lat, index) => [lat, longitutes[index]])
 }
 
 export function getBoundingBox(coordinates) {

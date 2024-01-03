@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import './RoutePlannerSidebar.css';
 import Routing from './Routing';
 import {getUserLocation} from "../utils/routing_utils";
-import {RouteContext, UserLocationContext} from "../Home";
+import {RouteContext} from "../Home";
 
 const RoutePlannerSidebar = ({ onClose, handleAddToRoute, setUserLocation, reload }) => {
 
@@ -25,7 +25,7 @@ const RoutePlannerSidebar = ({ onClose, handleAddToRoute, setUserLocation, reloa
                 await setUserLocation(location)
                 setIsLoading(false)
             } catch (error){
-                console.log("Error in findMe:", error)
+                console.log("Error in finding user location:", error)
                 setIsLoading(false)
             }
         }
@@ -42,12 +42,6 @@ const RoutePlannerSidebar = ({ onClose, handleAddToRoute, setUserLocation, reloa
     useEffect(() => {
         setIsLoading(false);
     }, [])
-
-    useEffect(() => {
-        // Add any additional logic you want to execute when routeSites changes
-        console.log('Route sites updated:', routeSites);
-    }, [handleAddToRoute]);
-
 
     return (
         <div className="route-planner-sidebar">

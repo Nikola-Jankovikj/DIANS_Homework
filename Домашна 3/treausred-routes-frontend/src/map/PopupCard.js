@@ -28,7 +28,7 @@ const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRou
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                credentials: "include", // Include cookies in the request
+                credentials: "include",
                 body: JSON.stringify({ objectId }),
             });
 
@@ -50,13 +50,12 @@ const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRou
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                credentials: "include", // Include cookies in the request
+                credentials: "include",
             });
 
             if (response.ok) {
                 setMyRating(rating)
 
-                // Fetch and update average ratings
                 const avgRatingResponse = await fetch(`http://localhost:8080/reviews/rating/${objectId}`);
                 const avgRating = await avgRatingResponse.json();
 
