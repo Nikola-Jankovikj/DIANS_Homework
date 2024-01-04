@@ -23,7 +23,7 @@ const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRou
 
     const handleToggleFavorite = async (objectId, locationName) => {
         try {
-            const response = await fetch('http://localhost:8080/favorites', {
+            const response = await fetch('http://localhost:9000/favorite-service/favorites', {
                 method: favorite ? 'DELETE' : 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRou
 
     const handleStarClick = async (objectId, rating) => {
         try {
-            const response = await fetch(`http://localhost:8080/reviews/${objectId}/${rating}`, {
+            const response = await fetch(`http://localhost:9000/review-service/reviews/${objectId}/${rating}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRou
             if (response.ok) {
                 setMyRating(rating)
 
-                const avgRatingResponse = await fetch(`http://localhost:8080/reviews/rating/${objectId}`, {
+                const avgRatingResponse = await fetch(`http://localhost:9000/review-service/reviews/rating/${objectId}`, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
                     }

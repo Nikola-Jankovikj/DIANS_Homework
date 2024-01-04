@@ -14,7 +14,7 @@ const ChangePasswordForm = () => {
 
     const handleChangePassword = async () => {
         try {
-            const response = await fetch("http://localhost:8080/user/changepassword", {
+            const response = await fetch("http://localhost:9000/authUser-service/user/changepassword", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

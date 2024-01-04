@@ -1,19 +1,19 @@
 const NavComponent = ({updateMarkers}) => {
 
     const findAll = () => {
-        updateMarkers('http://localhost:8080/api/all')
+        updateMarkers('http://localhost:9000/element-service/api/all')
     }
 
     const findMuseums = () => {
-        updateMarkers('http://localhost:8080/api/museums')
+        updateMarkers('http://localhost:9000/element-service/api/museums')
     }
 
     const findArchaeologicalSites = () => {
-        updateMarkers('http://localhost:8080/api/archaeologicalSites')
+        updateMarkers('http://localhost:9000/element-service/api/archaeologicalSites')
     }
 
     const findMonasteries = () => {
-        updateMarkers('http://localhost:8080/api/monasteries')
+        updateMarkers('http://localhost:9000/element-service/api/monasteries')
     }
 
 

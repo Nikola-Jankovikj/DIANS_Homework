@@ -64,7 +64,7 @@ const Home = () => {
     const initialCenter = [41.6090, 21.7453];
     const initialZoom = 9;
 
-    const [url, setUrl] = useState('http://localhost:8080/api/all');
+    const [url, setUrl] = useState('http://localhost:9000/element-service/api/all');
     const [state, setState] = useState([]);
 
     const [userRatings, setUserRatings] = useState({});

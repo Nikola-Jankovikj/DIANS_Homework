@@ -12,7 +12,7 @@ const Register = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch("http://localhost:8080/auth/register", {
+            const response = await fetch("http://localhost:9000/authUser-service/auth/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -30,7 +30,7 @@ const Register = () => {
             } else {
                 const errorData = await response.json();
                 setError(errorData.token);
-                console.error(errorData);
+                console.error("EVE ERROR-OT: " + errorData);
             }
         } catch (error) {
             setError("Error during registration. Please try again.");

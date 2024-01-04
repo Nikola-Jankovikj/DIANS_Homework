@@ -12,7 +12,7 @@ const Login = () => {
     const navigateHome = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch("http://localhost:8080/auth/authenticate", {
+            const response = await fetch("http://localhost:9000/authUser-service/auth/authenticate", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: api-gateway
+
+  ##GATEWAY CONFIGURATIONS
+
+  cloud:
+    gateway:
+      routes:
+        - id: favorite-service
+          uri: lb://favorite-service
+          predicates:
+            - Path=/favorite-service/**
+          filters:
+            - StripPrefix=1
+
+        - id: authUser-service
+          uri: lb://authUser-service
+          predicates:
+            - Path=/authUser-service/**
+          filters:
+            - StripPrefix=1
+
+        - id: element-service
+          uri: lb://element-service
+          predicates:
+            - Path=/element-service/**
+          filters:
+            - StripPrefix=1
+
+        - id: review-service
+          uri: lb://review-service
+          predicates:
+            - Path=/review-service/**
+          filters:
+            - StripPrefix=1
+
+server:
+  port: 9000
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka

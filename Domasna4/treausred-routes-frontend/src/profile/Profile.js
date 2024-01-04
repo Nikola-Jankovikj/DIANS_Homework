@@ -23,7 +23,7 @@ const Profile = () => {
     useEffect(() => {
         const fetchUserEmail = async () => {
             try {
-                const response = await fetch("http://localhost:8080/user/profile", {
+                const response = await fetch("http://localhost:9000/authUser-service/user/profile", {
                     method: "GET",
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
@@ -48,7 +48,7 @@ const Profile = () => {
 
     const handleChangeEmail = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/user/changemail/${newEmail}`, {
+            const response = await fetch(`http://localhost:9000/authUser-service/user/changemail/${newEmail}`, {
                 method: "PUT",
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`

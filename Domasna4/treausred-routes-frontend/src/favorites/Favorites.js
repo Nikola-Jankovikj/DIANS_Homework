@@ -12,7 +12,7 @@ const Favorites = (state) => {
 
     const fetchFavorites = async () => {
         try {
-            const response = await fetch('http://localhost:8080/favorites/all', {
+            const response = await fetch('http://localhost:9000/favorite-service/favorites/all', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -25,14 +25,14 @@ const Favorites = (state) => {
                 const data = await response.json();
 
                 const favoritesWithRatingsPromises = data.map(async (favorite) => {
-                    const ratingResponse = await fetch(`http://localhost:8080/reviews/rating/${favorite.id}`, {
+                    const ratingResponse = await fetch(`http://localhost:9000/review-service/reviews/rating/${favorite.id}`, {
                         headers: {
                             'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
                         }
                     });
                     const ratingData = await ratingResponse.json();
 
-                    const userRatingResponse = await fetch(`http://localhost:8080/reviews/userRating/${favorite.id}`, {
+                    const userRatingResponse = await fetch(`http://localhost:9000/review-service/reviews/userRating/${favorite.id}`, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const Favorites = (state) => {
     };
 
     const removeFromFavorites = (objectId) => {
-        fetch('http://localhost:8080/favorites', {
+        fetch('http://localhost:9000/favorite-service/favorites', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ const Favorites = (state) => {
 
     const handleRatingClick = async (objectId, ratingId) => {
         try {
-            const response = await fetch(`http://localhost:8080/reviews/${objectId}/${ratingId}`, {
+            const response = await fetch(`http://localhost:9000/review-service/reviews/${objectId}/${ratingId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

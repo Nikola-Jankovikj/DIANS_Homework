@@ -16,7 +16,7 @@ const ProfileDropdown = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await fetch("http://localhost:8080/user/profile", {
+                const response = await fetch("http://localhost:9000/authUser-service/user/profile", {
                     method: "GET",
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
@@ -38,7 +38,7 @@ const ProfileDropdown = () => {
     }, []);
     const handleLogout = async () => {
         try {
-            const response = await fetch("http://localhost:8080/auth/logout", {
+            const response = await fetch("http://localhost:9000/authUser-service/auth/logout", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
