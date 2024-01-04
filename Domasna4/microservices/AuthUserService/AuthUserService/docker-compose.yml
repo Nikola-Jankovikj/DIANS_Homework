@@ -1,0 +1,15 @@
+version: "3"
+services:
+  authUser-db:
+    image: "postgres"
+    container_name: "authUser"
+
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=authUser
+
+    ports:
+      - "5432:5432"
+    volumes:
+      - /var/lib/postgresql/data
