@@ -5,7 +5,9 @@ import mk.ukim.finki.reviewservice.model.Review;
 import mk.ukim.finki.reviewservice.model.exceptions.ReviewNotFoundException;
 import mk.ukim.finki.reviewservice.repository.ReviewsRepository;
 import mk.ukim.finki.reviewservice.service.ReviewsService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -14,6 +16,7 @@ import java.util.List;
 public class ReviewsServiceImplementation implements ReviewsService {
 
     private final ReviewsRepository reviewsRepository;
+    private final RestTemplate restTemplate;
 
     @Override
     public void addReview(Long userId, Long elementId, int rating) {
@@ -51,5 +54,14 @@ public class ReviewsServiceImplementation implements ReviewsService {
         Review review = reviewsRepository.findByUserIdAndElementId(userId, elementId)
                 .orElseThrow(ReviewNotFoundException::new);
         return review.getRating();
+    }
+
+    @Override
+    public Long authUserId(String authServiceName) {
+        String authUserEndpoint = "http://" + authServiceName + "/auth/authUser";
+        System.out.println("ENDPOINT: " + authUserEndpoint);
+        ResponseEntity<Long> responseEntity = restTemplate.getForEntity(authUserEndpoint, Long.class);
+        System.out.println("RESPONSE: " + responseEntity);
+        return responseEntity.getBody();
     }
 }

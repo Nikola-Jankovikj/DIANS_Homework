@@ -8,4 +8,6 @@ public interface FavoritesService {
     void removeFromFavorites(Long userId, Long elementId);
     List<Long> getUserFavorites(Long userId);
     boolean isElementFavorited(Long userId, Long elementId);
+
+    Long authUserId(String authServiceName);
 }

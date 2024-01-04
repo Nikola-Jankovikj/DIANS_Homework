@@ -16,31 +16,35 @@ import java.util.Map;
 public class FavoritesController {
 
     private final FavoritesService favoritesService;
-    //private final AuthenticationService authenticationService;
 
     @GetMapping("/all")
     public ResponseEntity<List<Long>> getUserFavorites() {
-        List<Long> userFavorites = favoritesService.getUserFavorites(1L);
+        Long userId = favoritesService.authUserId("authUser-service");
+        System.out.println("USER ID: " + userId);
+        List<Long> userFavorites = favoritesService.getUserFavorites(userId);
         return ResponseEntity.ok(userFavorites);
     }
 
     @PutMapping()
     public ResponseEntity<String> addToFavorites(@RequestBody Map<String, Long> requestBody) {
         Long elementId = requestBody.get("objectId");
-        favoritesService.addToFavorites(1L, elementId);
+        Long userId = favoritesService.authUserId("authUser-service");
+        favoritesService.addToFavorites(userId, elementId);
         return ResponseEntity.ok("{\"info\": \"Added to favorites\"}");
     }
 
     @DeleteMapping
     public ResponseEntity<String> deleteFromFavorites(@RequestBody Map<String, Long> requestBody) {
         Long elementId = requestBody.get("objectId");
-        favoritesService.removeFromFavorites(1L, elementId);
+        Long userId = favoritesService.authUserId("authUser-service");
+        favoritesService.removeFromFavorites(userId, elementId);
         return ResponseEntity.ok("{\"info\": \"Removed from favorites\"}");
     }
 
     @GetMapping("/check/{elementId}")
     public ResponseEntity<Boolean> checkIfElementIsFavoritedByUser(@PathVariable Long elementId){
-        boolean isFavorited = favoritesService.isElementFavorited(1L, elementId);
+        Long userId = favoritesService.authUserId("authUser-service");
+        boolean isFavorited = favoritesService.isElementFavorited(userId, elementId);
         return ResponseEntity.ok(isFavorited);
     }
 }

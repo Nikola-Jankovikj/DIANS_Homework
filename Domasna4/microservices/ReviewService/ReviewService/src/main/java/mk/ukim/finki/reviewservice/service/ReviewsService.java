@@ -11,4 +11,6 @@ public interface ReviewsService {
     List<Review> getUserReviews(Long userId);
     double getElementRating(Long elementId);
     int getRatingByUserAndElement(Long userId, Long elementId) throws ReviewNotFoundException;
+
+    Long authUserId(String authServiceName);
 }

@@ -19,7 +19,6 @@ import java.util.List;
 public class ReviewsController {
 
     private final ReviewsService reviewsService;
-    //private final AuthenticationService authenticationService;
 
     @GetMapping("/rating/{elementId}")
     public ResponseEntity<Double> getElementRating(@PathVariable Long elementId) {
@@ -29,15 +28,17 @@ public class ReviewsController {
 
     @GetMapping("/allUserReviews")
     public ResponseEntity<List<Review>> getUserReviews() {
-        List<Review> reviews = reviewsService.getUserReviews(1L);
+        Long userId = reviewsService.authUserId("authUser-service");
+        List<Review> reviews = reviewsService.getUserReviews(userId);
         return ResponseEntity.ok(reviews);
     }
 
     @GetMapping("/userRating/{elementId}")
     public ResponseEntity<Integer> getRatingByUserAndElement(@PathVariable Long elementId) {
         int userRating;
+        Long userId = reviewsService.authUserId("authUser-service");
         try {
-            userRating = reviewsService.getRatingByUserAndElement(1L, elementId);
+            userRating = reviewsService.getRatingByUserAndElement(userId, elementId);
         } catch (ReviewNotFoundException e) {
             return ResponseEntity.badRequest().body(0);
         }
@@ -49,13 +50,15 @@ public class ReviewsController {
             @PathVariable Long elementId,
             @PathVariable int rating)
     {
-        reviewsService.addReview(1L, elementId, rating);
+        Long userId = reviewsService.authUserId("authUser-service");
+        reviewsService.addReview(userId, elementId, rating);
         return ResponseEntity.ok("{\"info\": \"Added review\"}");
     }
 
     @DeleteMapping("/{elementId}")
     public ResponseEntity<String> deleteFromFavorites(@PathVariable Long elementId) {
-        reviewsService.removeReview(1L, elementId);
+        Long userId = reviewsService.authUserId("authUser-service");
+        reviewsService.removeReview(userId, elementId);
         return ResponseEntity.ok("{\"info\": \"Removed review\"}");
     }
 }
