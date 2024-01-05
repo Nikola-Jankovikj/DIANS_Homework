@@ -1,6 +1,11 @@
 spring:
   application:
     name: api-gateway
+  gateway:
+    httpclient:
+      wiretap: true
+    httpserver:
+      wiretap: true
 
   ##GATEWAY CONFIGURATIONS
 
@@ -20,6 +25,9 @@ spring:
             - Path=/authUser-service/**
           filters:
             - StripPrefix=1
+#            - name: Cors
+#              args:
+#                corsConfigurationSource: '@corsWebFilter'
 
         - id: element-service
           uri: lb://element-service
@@ -42,3 +50,13 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
+
+logging:
+  level:
+    reactor:
+      netty: INFO
+    org:
+      springframework:
+        cloud:
+          gateway: TRACE
+        web: DEBUG

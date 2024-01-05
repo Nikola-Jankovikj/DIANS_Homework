@@ -22,7 +22,7 @@ const Register = () => {
                     password: password,
                     confirmPassword: confirmPassword,
                 }),
-                credentials: "include",
+                // credentials: "include",
             });
 
             if (response.ok) {

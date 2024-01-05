@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @Validated
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:9000"})
+//@CrossOrigin(origins = "/**")
+//"http://localhost:3000", "http://localhost:9000"
+//{"http://localhost:3000", "http://localhost:9000", "http://localhost:5555"}
 public class AuthenticationController {
 
     private final AuthenticationService service;
@@ -55,5 +57,10 @@ public class AuthenticationController {
         } catch (EmailDoesNotExist e) {
             return ResponseEntity.badRequest().body(null);
         }
+    }
+
+    @GetMapping("/health")
+    public ResponseEntity<String> checkHealth(){
+        return ResponseEntity.ok("It is ok");
     }
 }
