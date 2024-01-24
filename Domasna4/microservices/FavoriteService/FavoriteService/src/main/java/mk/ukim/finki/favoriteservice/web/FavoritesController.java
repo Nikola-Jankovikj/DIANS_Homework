@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@Validated
-@CrossOrigin(origins = "http://localhost:3000")
+//@Validated
+//@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/favorites")
 @RequiredArgsConstructor
 public class FavoritesController {

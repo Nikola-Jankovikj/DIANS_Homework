@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@Validated
-@CrossOrigin(origins = "http://localhost:3000")
+//@Validated
+//@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/reviews")
 @RequiredArgsConstructor
 public class ReviewsController {

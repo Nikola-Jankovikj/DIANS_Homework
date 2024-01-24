@@ -13,8 +13,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api")
-@Validated
-@CrossOrigin(origins = "http://localhost:3000")
+//@Validated
+//@CrossOrigin(origins = "http://localhost:3000")
 public class ElementController {
     private final ElementService elementService;
 
