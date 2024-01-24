@@ -9,5 +9,5 @@ public interface FavoritesService {
     List<Long> getUserFavorites(Long userId);
     boolean isElementFavorited(Long userId, Long elementId);
 
-    Long authUserId(String authServiceName);
+    Long authUserId(String authServiceName, String jwt);
 }

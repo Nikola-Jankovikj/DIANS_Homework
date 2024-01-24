@@ -53,9 +53,10 @@ public class AuthenticationController {
     @GetMapping("/authUser")
     public ResponseEntity<Long> getAuthUserId() {
         try {
-            return ResponseEntity.ok(service.getAuthenticatedUser().getId());
+            Long userId = service.getAuthenticatedUser().getId();
+            return ResponseEntity.ok(userId);
         } catch (EmailDoesNotExist e) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body(10L);
         }
     }
 
