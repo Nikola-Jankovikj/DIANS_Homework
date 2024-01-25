@@ -12,16 +12,11 @@ import mk.ukim.finki.authuserservice.service.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-//@Validated
-//@CrossOrigin(origins = "/*")
-//"http://localhost:3000", "http://localhost:9000"
-//{"http://localhost:3000", "http://localhost:9000", "http://localhost:5555"}
 public class AuthenticationController {
 
     private final AuthenticationService service;

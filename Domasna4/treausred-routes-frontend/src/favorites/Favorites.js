@@ -24,30 +24,46 @@ const Favorites = (state) => {
             if (response.ok) {
                 const data = await response.json();
 
-                const favoritesWithRatingsPromises = data.map(async (favorite) => {
-                    const ratingResponse = await fetch(`http://localhost:9000/review-service/reviews/rating/${favorite.id}`, {
-                        headers: {
-                            'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
-                        }
-                    });
-                    const ratingData = await ratingResponse.json();
-
-                    const userRatingResponse = await fetch(`http://localhost:9000/review-service/reviews/userRating/${favorite.id}`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
-                        },
-                        credentials: "include",
-                    });
-                    const userRating = await userRatingResponse.json()
-
-                    return { ...favorite, starRating: userRating, averageRating: ratingData };
+                const els = await fetch("http://localhost:9000/element-service/api/allByIds", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
+                    },
+                    credentials: "include",
+                    body: JSON.stringify(data)
                 });
 
-                const favoritesWithRatings = await Promise.all(favoritesWithRatingsPromises);
+                if (!els.ok) {
+                    const errorResponse = await els.json();
+                    console.error('Error response:', errorResponse);
+                } else {
+                    const elements = await els.json();
 
-                setFavorites(favoritesWithRatings);
+                    const favoritesWithRatingsPromises = elements.map(async (favorite) => {
+                        const ratingResponse = await fetch(`http://localhost:9000/review-service/reviews/rating/${favorite.id}`, {
+                            headers: {
+                                'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
+                            }
+                        });
+                        const ratingData = await ratingResponse.json();
+
+                        const userRatingResponse = await fetch(`http://localhost:9000/review-service/reviews/userRating/${favorite.id}`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
+                            },
+                            credentials: "include",
+                        });
+                        const userRating = await userRatingResponse.json()
+
+                        return { ...favorite, starRating: userRating, averageRating: ratingData };
+                    });
+
+                    const favoritesWithRatings = await Promise.all(favoritesWithRatingsPromises);
+                    setFavorites(favoritesWithRatings);
+                }
             } else {
                 navigate("/login")
                 console.error('Failed to fetch favorites:', response.statusText);

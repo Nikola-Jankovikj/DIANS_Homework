@@ -13,29 +13,6 @@ const ProfileDropdown = () => {
 
     const [profilePicture, setProfilePicture] = useState("");
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const response = await fetch("http://localhost:9000/authUser-service/user/profile", {
-                    method: "GET",
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
-                    }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    setProfilePicture(data["profile-picture"]);
-                } else {
-                    console.error("Error fetching user email");
-                }
-            } catch (error) {
-                console.error("Error fetching user email", error);
-            }
-        };
-
-        fetchUserData();
-    }, []);
     const handleLogout = async () => {
         try {
             const response = await fetch("http://localhost:9000/authUser-service/auth/logout", {
@@ -81,11 +58,19 @@ const ProfileDropdown = () => {
 
             {isOpen && (
                 <div id="dropdown-menu">
-                    <button className="dropdown-item1" onClick={navigateFavorites}>Favorites</button>
-                    <button className="dropdown-item1" onClick={navigateAccount}>Account</button>
-                    <button className="dropdown-item" onClick={handleLogout}>
-                        Log out
-                    </button>
+                    {localStorage.getItem('jwtToken') ? (
+                        <>
+                            <button className="dropdown-item1" onClick={navigateFavorites}>Favorites</button>
+                            <button className="dropdown-item1" onClick={navigateAccount}>Account</button>
+                            <button className="dropdown-item" onClick={handleLogout}>
+                                Log out
+                            </button>
+                        </>
+                    ) : (
+                        <button className="dropdown-item" onClick={() => navigate("/login")}>
+                            Log in
+                        </button>
+                    )}
                 </div>
             )}
         </div>

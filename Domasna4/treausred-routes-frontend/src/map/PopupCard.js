@@ -1,7 +1,7 @@
 import {useContext, useEffect, useState} from "react";
 import {StateContext} from "../Home";
-import favorites from "../favorites/Favorites";
 import {fetchFavorite, fetchRating, fetchUserRating} from "../utils/popup_fetch_utils";
+import {useNavigate} from "react-router-dom";
 
 const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRoute}) => {
 
@@ -9,7 +9,7 @@ const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRou
     const [myRating, setMyRating] = useState();
     const [averageRating, setAverageRating] = useState();
 
-
+    const navigate = useNavigate()
     const state = useContext(StateContext);
 
 
@@ -38,6 +38,12 @@ const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRou
 
             if (!response.ok) {
                 console.error('Failed to toggle favorites');
+                const userChoice = window.confirm('You need to log in to add favorites. Log in?');
+                if (userChoice) {
+                    navigate("/login");
+                } else {
+                    navigate("/home");
+                }
             }
         } catch (error) {
             console.error('Error:', error);
@@ -68,6 +74,12 @@ const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRou
                 setAverageRating(avgRating)
             } else {
                 console.error('Failed to add review');
+                const userChoice = window.confirm('You need to log in to add a review. Log in?');
+                if (userChoice) {
+                    navigate("/login");
+                } else {
+                    navigate("/home");
+                }
             }
         } catch (error) {
             console.error('Error:', error);

@@ -20,4 +20,6 @@ public interface ElementService {
 
     Element addUserLocation(Double latitude, Double longitude);
 
+    List<Element> findAllById(List<Long> ids);
+
 }

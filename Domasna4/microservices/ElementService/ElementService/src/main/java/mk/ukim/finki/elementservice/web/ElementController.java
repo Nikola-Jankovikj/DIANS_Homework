@@ -5,7 +5,6 @@ import mk.ukim.finki.elementservice.model.Element;
 import mk.ukim.finki.elementservice.service.ElementService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,8 +12,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api")
-//@Validated
-//@CrossOrigin(origins = "http://localhost:3000")
 public class ElementController {
     private final ElementService elementService;
 
@@ -66,5 +63,10 @@ public class ElementController {
         return new ResponseEntity<>(elementService.addUserLocation(latitude, longitude), HttpStatus.OK);
     }
 
+    @PostMapping("/allByIds")
+    public ResponseEntity<List<Element>> getElementsByIds(@RequestBody Long[] elementIds) {
+        List<Element> elements = elementService.findAllById(List.of(elementIds));
+        return ResponseEntity.ok(elements);
+    }
 
 }

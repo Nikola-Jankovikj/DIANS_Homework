@@ -25,9 +25,6 @@ spring:
             - Path=/authUser-service/**
           filters:
             - StripPrefix=1
-#            - name: Cors
-#              args:
-#                corsConfigurationSource: '@corsWebFilter'
 
         - id: element-service
           uri: lb://element-service

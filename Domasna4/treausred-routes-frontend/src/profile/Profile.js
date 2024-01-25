@@ -35,7 +35,7 @@ const Profile = () => {
                     setEmail(data.email);
                     setProfilePicture(data["profile-picture"]);
                 } else {
-                    console.error("Error fetching user email");
+                    console.error("!!!Error fetching user email");
                     navigate("/login")
                 }
             } catch (error) {

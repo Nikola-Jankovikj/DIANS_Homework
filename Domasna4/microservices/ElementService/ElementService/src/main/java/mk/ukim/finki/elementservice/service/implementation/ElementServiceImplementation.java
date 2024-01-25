@@ -75,4 +75,9 @@ public class ElementServiceImplementation implements ElementService {
         Element userLocation = new Element("0", "User", "User", latitude.toString(), longitude.toString());
         return elementRepository.save(userLocation);
     }
+
+    @Override
+    public List<Element> findAllById(List<Long> ids) {
+        return elementRepository.findAllById(ids);
+    }
 }

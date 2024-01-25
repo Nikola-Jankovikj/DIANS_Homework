@@ -7,15 +7,10 @@ import mk.ukim.finki.reviewservice.model.exceptions.ReviewNotFoundException;
 import mk.ukim.finki.reviewservice.service.ReviewsService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Map;
 
 @RestController
-//@Validated
-//@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/reviews")
 @RequiredArgsConstructor
 public class ReviewsController {
