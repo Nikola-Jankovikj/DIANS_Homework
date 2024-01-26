@@ -61,7 +61,10 @@ const Profile = () => {
                 setEmail(data.newEmail);
                 setNewEmail("");
                 setIsSuccess(true);
+                localStorage.removeItem("jwtToken")
                 navigate("/login")
+                window.alert('Please log in with your new e-mail');
+
             } else {
                 const errorData = await response.json();
                 setFeedbackMessage(`${errorData.error}`);
