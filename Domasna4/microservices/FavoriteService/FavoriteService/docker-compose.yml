@@ -1,0 +1,15 @@
+version: "3"
+services:
+  favorite-db:
+    image: "postgres"
+    container_name: "favorite"
+
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=favorite
+
+    ports:
+      - "5435:5432"
+    volumes:
+      - /var/lib/postgresql/data
