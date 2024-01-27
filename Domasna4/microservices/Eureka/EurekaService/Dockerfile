@@ -6,6 +6,6 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Step 2: Create the runtime image using an OpenJDK image
-FROM openjdk:11-jre-slim
+FROM openjdk:17-jre-slim
 COPY --from=build /app/target/*.jar app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
