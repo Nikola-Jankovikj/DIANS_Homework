@@ -46,7 +46,7 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: https://dianshomework-eureka.up.railway.app/
+      defaultZone: https://dianshomework-eureka.up.railway.app/eureka
 
 logging:
   level:
