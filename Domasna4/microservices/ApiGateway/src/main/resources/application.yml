@@ -7,36 +7,34 @@ spring:
     httpserver:
       wiretap: true
 
-  ##GATEWAY CONFIGURATIONS
-
   cloud:
     gateway:
       routes:
-        - id: favorite-service
-          uri: lb://favorite-service
+        - id: user-service
+          uri: https://foolish-development-users.up.railway.app
           predicates:
-            - Path=/favorite-service/**
-          filters:
-            - StripPrefix=1
-
-        - id: authUser-service
-          uri: lb://authUser-service
-          predicates:
-            - Path=/authUser-service/**
+            - Path=/user-service/**
           filters:
             - StripPrefix=1
 
         - id: element-service
-          uri: lb://element-service
+          uri: https://boss-throne-element.up.railway.app
           predicates:
             - Path=/element-service/**
           filters:
             - StripPrefix=1
 
         - id: review-service
-          uri: lb://review-service
+          uri: https://deafening-drain-reviews.up.railway.app
           predicates:
             - Path=/review-service/**
+          filters:
+            - StripPrefix=1
+
+        - id: favorite-service
+          uri: https://misty-religion-favorite.up.railway.app
+          predicates:
+            - Path=/favorite-service/**
           filters:
             - StripPrefix=1
 
