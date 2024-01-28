@@ -1,4 +1,5 @@
 # Домашни задачи по предметот Дизајн и архитектура на софтвер
+Линк до хостираната апликација во облак: https://treasuredroutes.up.railway.app/home
 
 ### Приказ на функционалностите изработени за целите на [Домашна 3](https://github.com/Nikola-Jankovikj/DIANS_Homework/tree/master/%D0%94%D0%BE%D0%BC%D0%B0%D1%88%D0%BD%D0%B0%203)
 
