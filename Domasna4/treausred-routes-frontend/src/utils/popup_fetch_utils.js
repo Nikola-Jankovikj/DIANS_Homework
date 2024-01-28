@@ -1,5 +1,5 @@
 export function fetchFavorite (obj, setFavorite) {
-    fetch(`http://localhost:9000/favorite-service/favorites/check/${obj.id}`, {
+    fetch(`https://graceful-yoke-api.up.railway.app/favorite-service/favorites/check/${obj.id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -14,7 +14,7 @@ export function fetchFavorite (obj, setFavorite) {
 }
 
 export function fetchRating  (obj, setAverageRating)  {
-    fetch(`http://localhost:9000/review-service/reviews/rating/${obj.id}`,{
+    fetch(`https://graceful-yoke-api.up.railway.app/review-service/reviews/rating/${obj.id}`,{
         method: 'GET',
         headers:{
             'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ export function fetchRating  (obj, setAverageRating)  {
 }
 
 export function fetchUserRating(obj, setMyRating){
-    fetch(`http://localhost:9000/review-service/reviews/userRating/${obj.id}`,{
+    fetch(`https://graceful-yoke-api.up.railway.app/review-service/reviews/userRating/${obj.id}`,{
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',

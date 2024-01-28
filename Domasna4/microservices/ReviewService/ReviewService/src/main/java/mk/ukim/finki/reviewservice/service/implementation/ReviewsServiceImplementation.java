@@ -21,7 +21,7 @@ public class ReviewsServiceImplementation implements ReviewsService {
 
     private final ReviewsRepository reviewsRepository;
     private final RestTemplate restTemplate;
-
+    private String authUser = "graceful-yoke-api.up.railway.app";
     @Override
     public void addReview(Long userId, Long elementId, int rating) {
         Review review = new Review(userId, elementId, rating);
@@ -62,7 +62,7 @@ public class ReviewsServiceImplementation implements ReviewsService {
 
     @Override
     public Long authUserId(String authServiceName, String jwt) {
-        String authUserEndpoint = "http://" + authServiceName + "/auth/authUser";
+        String authUserEndpoint = "https://" + "foolish-development-users.up.railway.app" + "/auth/authUser";
         System.out.println("ENDPOINT: " + authUserEndpoint);
 
         HttpHeaders headers = new HttpHeaders();
