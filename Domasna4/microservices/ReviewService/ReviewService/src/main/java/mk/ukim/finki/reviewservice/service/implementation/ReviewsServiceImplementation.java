@@ -62,7 +62,7 @@ public class ReviewsServiceImplementation implements ReviewsService {
 
     @Override
     public Long authUserId(String authServiceName, String jwt) {
-        String authUserEndpoint = "http://" + authServiceName + "/auth/authUser";
+        String authUserEndpoint = "https://" + "foolish-development-users.up.railway.app" + "/auth/authUser";
         System.out.println("ENDPOINT: " + authUserEndpoint);
 
         HttpHeaders headers = new HttpHeaders();
