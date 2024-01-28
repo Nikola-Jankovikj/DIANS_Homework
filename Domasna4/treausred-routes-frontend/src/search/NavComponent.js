@@ -1,19 +1,19 @@
 const NavComponent = ({updateMarkers}) => {
 
     const findAll = () => {
-        updateMarkers('http://graceful-yoke.railway.internal/element-service/api/all')
+        updateMarkers('https://graceful-yoke.railway.internal/element-service/api/all')
     }
 
     const findMuseums = () => {
-        updateMarkers('http://graceful-yoke.railway.internal/element-service/api/museums')
+        updateMarkers('https://graceful-yoke.railway.internal/element-service/api/museums')
     }
 
     const findArchaeologicalSites = () => {
-        updateMarkers('http://graceful-yoke.railway.internal/element-service/api/archaeologicalSites')
+        updateMarkers('https://graceful-yoke.railway.internal/element-service/api/archaeologicalSites')
     }
 
     const findMonasteries = () => {
-        updateMarkers('http://graceful-yoke.railway.internal/element-service/api/monasteries')
+        updateMarkers('https://graceful-yoke.railway.internal/element-service/api/monasteries')
     }
 
 
