@@ -23,7 +23,7 @@ const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRou
 
     const handleToggleFavorite = async (objectId, locationName) => {
         try {
-            const response = await fetch('https://graceful-yoke.railway.internal/favorite-service/favorites', {
+            const response = await fetch('https://graceful-yoke-api.up.railway.app/favorite-service/favorites', {
                 method: favorite ? 'DELETE' : 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRou
 
     const handleStarClick = async (objectId, rating) => {
         try {
-            const response = await fetch(`https://graceful-yoke.railway.internal/review-service/reviews/${objectId}/${rating}`, {
+            const response = await fetch(`https://graceful-yoke-api.up.railway.app/review-service/reviews/${objectId}/${rating}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRou
             if (response.ok) {
                 setMyRating(rating)
 
-                const avgRatingResponse = await fetch(`https://graceful-yoke.railway.internal/review-service/reviews/rating/${objectId}`, {
+                const avgRatingResponse = await fetch(`https://graceful-yoke-api.up.railway.app/review-service/reviews/rating/${objectId}`, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
                     }

@@ -12,7 +12,7 @@ const Favorites = (state) => {
 
     const fetchFavorites = async () => {
         try {
-            const response = await fetch('https://graceful-yoke.railway.internal/favorite-service/favorites/all', {
+            const response = await fetch('https://graceful-yoke-api.up.railway.app/favorite-service/favorites/all', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -24,7 +24,7 @@ const Favorites = (state) => {
             if (response.ok) {
                 const data = await response.json();
 
-                const els = await fetch("https://graceful-yoke.railway.internal/element-service/api/allByIds", {
+                const els = await fetch("https://graceful-yoke-api.up.railway.app/element-service/api/allByIds", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -41,14 +41,14 @@ const Favorites = (state) => {
                     const elements = await els.json();
 
                     const favoritesWithRatingsPromises = elements.map(async (favorite) => {
-                        const ratingResponse = await fetch(`https://graceful-yoke.railway.internal/review-service/reviews/rating/${favorite.id}`, {
+                        const ratingResponse = await fetch(`https://graceful-yoke-api.up.railway.app/review-service/reviews/rating/${favorite.id}`, {
                             headers: {
                                 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
                             }
                         });
                         const ratingData = await ratingResponse.json();
 
-                        const userRatingResponse = await fetch(`https://graceful-yoke.railway.internal/review-service/reviews/userRating/${favorite.id}`, {
+                        const userRatingResponse = await fetch(`https://graceful-yoke-api.up.railway.app/review-service/reviews/userRating/${favorite.id}`, {
                             method: 'GET',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ const Favorites = (state) => {
     };
 
     const removeFromFavorites = (objectId) => {
-        fetch('https://graceful-yoke.railway.internal/favorite-service/favorites', {
+        fetch('https://graceful-yoke-api.up.railway.app/favorite-service/favorites', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -99,7 +99,7 @@ const Favorites = (state) => {
 
     const handleRatingClick = async (objectId, ratingId) => {
         try {
-            const response = await fetch(`https://graceful-yoke.railway.internal/review-service/reviews/${objectId}/${ratingId}`, {
+            const response = await fetch(`https://graceful-yoke-api.up.railway.app/review-service/reviews/${objectId}/${ratingId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

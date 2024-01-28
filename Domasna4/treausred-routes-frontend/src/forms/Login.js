@@ -12,7 +12,7 @@ const Login = () => {
     const navigateHome = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch("https://graceful-yoke.railway.internal/authUser-service/auth/authenticate", {
+            const response = await fetch("https://graceful-yoke-api.up.railway.app/authUser-service/auth/authenticate", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
