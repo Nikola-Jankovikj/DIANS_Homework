@@ -10,10 +10,10 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: user-service
+        - id: authUser-service
           uri: https://foolish-development-users.up.railway.app
           predicates:
-            - Path=/user-service/**
+            - Path=/authUser-service/**
           filters:
             - StripPrefix=1
 
