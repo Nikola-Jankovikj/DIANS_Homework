@@ -19,7 +19,7 @@ const SearchComponent = ({updateMarkers, focusTarget, focusMap}, initialCenter) 
     }
 
     useEffect(() => {
-        fetch(`https://graceful-yoke-api.up.railway.app/element-service/api/search?query=${query}`, {
+        fetch(`http://graceful-yoke.railway.internal/element-service/api/search?query=${query}`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
             }
@@ -35,15 +35,15 @@ const SearchComponent = ({updateMarkers, focusTarget, focusMap}, initialCenter) 
     }
 
     const onSearch = async (searchTerm) => {
-        await fetchData(`https://graceful-yoke-api.up.railway.app/element-service/api/search?query=${searchTerm}`, setObjsForFocus)
+        await fetchData(`http://graceful-yoke.railway.internal/element-service/api/search?query=${searchTerm}`, setObjsForFocus)
         var coordinates = calculateNewCenter(objsForFocus, initialCenter)
         if(coordinates.length === 1){
-            updateMarkers(`https://graceful-yoke-api.up.railway.app/element-service/api/search?query=${searchTerm}`)
+            updateMarkers(`http://graceful-yoke.railway.internal/element-service/api/search?query=${searchTerm}`)
             focusTarget(coordinates[0])
         }
         else{
             var boundingBox = getBoundingBox(coordinates)
-            updateMarkers(`https://graceful-yoke-api.up.railway.app/element-service/api/search?query=${searchTerm}`)
+            updateMarkers(`http://graceful-yoke.railway.internal/element-service/api/search?query=${searchTerm}`)
             focusMap(boundingBox)
         }
     }

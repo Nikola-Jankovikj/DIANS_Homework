@@ -12,7 +12,7 @@ const Register = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch("https://graceful-yoke-api.up.railway.app/authUser-service/auth/register", {
+            const response = await fetch("http://graceful-yoke.railway.internal/authUser-service/auth/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

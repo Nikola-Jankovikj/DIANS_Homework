@@ -15,7 +15,7 @@ const ProfileDropdown = () => {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch("https://graceful-yoke-api.up.railway.app/authUser-service/auth/logout", {
+            const response = await fetch("http://graceful-yoke.railway.internal/authUser-service/auth/logout", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

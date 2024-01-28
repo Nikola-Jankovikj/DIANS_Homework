@@ -14,7 +14,7 @@ const ChangePasswordForm = () => {
 
     const handleChangePassword = async () => {
         try {
-            const response = await fetch("https://graceful-yoke-api.up.railway.app/authUser-service/user/changepassword", {
+            const response = await fetch("http://graceful-yoke.railway.internal/authUser-service/user/changepassword", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
