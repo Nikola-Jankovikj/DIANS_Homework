@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class FavoritesServiceImplementation implements FavoritesService {
     private final FavoritesRepository favoritesRepository;
     private final RestTemplate restTemplate;
-    private String authUser = "foolish-development-users.up.railway.app ";
+    private String authUser = "foolish-development-users.up.railway.app";
 
     @Override
     public void addToFavorites(Long userId, Long elementId) {
@@ -42,7 +42,7 @@ public class FavoritesServiceImplementation implements FavoritesService {
 
     @Override
     public Long authUserId(String authServiceName, String jwt) {
-        String authUserEndpoint = "https://" + authUser + "/auth/authUser";
+        String authUserEndpoint = "https://" + authServiceName + "/auth/authUser";
         System.out.println("ENDPOINT: " + authUserEndpoint);
 
         HttpHeaders headers = new HttpHeaders();

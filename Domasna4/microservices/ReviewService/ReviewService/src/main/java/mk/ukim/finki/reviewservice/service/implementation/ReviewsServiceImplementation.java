@@ -21,7 +21,7 @@ public class ReviewsServiceImplementation implements ReviewsService {
 
     private final ReviewsRepository reviewsRepository;
     private final RestTemplate restTemplate;
-    private String authUser = "foolish-development-users.up.railway.app ";
+    private String authUser = "foolish-development-users.up.railway.app";
     @Override
     public void addReview(Long userId, Long elementId, int rating) {
         Review review = new Review(userId, elementId, rating);
@@ -62,7 +62,7 @@ public class ReviewsServiceImplementation implements ReviewsService {
 
     @Override
     public Long authUserId(String authServiceName, String jwt) {
-        String authUserEndpoint = "http://" + authUser + "/auth/authUser";
+        String authUserEndpoint = "https://" + authUser + "/auth/authUser";
         System.out.println("ENDPOINT: " + authUserEndpoint);
 
         HttpHeaders headers = new HttpHeaders();
