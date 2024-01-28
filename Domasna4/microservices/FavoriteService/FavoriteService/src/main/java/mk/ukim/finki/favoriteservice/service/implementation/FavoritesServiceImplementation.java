@@ -42,7 +42,7 @@ public class FavoritesServiceImplementation implements FavoritesService {
 
     @Override
     public Long authUserId(String authServiceName, String jwt) {
-        String authUserEndpoint = "http://" + authServiceName +  "/auth/authUser";
+        String authUserEndpoint = "http://railway:" + authServiceName +  "/auth/authUser";
         System.out.println("ENDPOINT: " + authUserEndpoint);
 
         HttpHeaders headers = new HttpHeaders();

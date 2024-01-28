@@ -29,6 +29,7 @@ public class FavoritesController {
     public ResponseEntity<String> addToFavorites(
             @RequestBody Map<String, Long> requestBody,
             @RequestHeader(name = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+
         Long elementId = requestBody.get("objectId");
         Long userId = favoritesService.authUserId("authUser-service", authorizationHeader);
         favoritesService.addToFavorites(userId, elementId);
