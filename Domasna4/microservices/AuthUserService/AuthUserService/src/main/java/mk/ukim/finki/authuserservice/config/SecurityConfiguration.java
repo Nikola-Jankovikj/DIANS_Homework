@@ -41,13 +41,13 @@ public class SecurityConfiguration {
         http.cors(customizer ->
                 customizer.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(Arrays.asList("*")); // Allow all origins
+                    config.setAllowedOrigins(Arrays.asList("https://chosen-bells-api.up.railway.app", "graceful-yoke-api.up.railway.app")); // Allow all origins
                     config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(Arrays.asList("*")); // Allow all headers
                     config.setAllowCredentials(true);
                     return config;
                 }));
-        
+
         return http.build();
     }
 
