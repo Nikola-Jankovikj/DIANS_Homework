@@ -64,7 +64,7 @@ const Home = () => {
     const initialCenter = [41.6090, 21.7453];
     const initialZoom = 9;
 
-    const [url, setUrl] = useState('http://localhost:9000/element-service/api/all');
+    const [url, setUrl] = useState('https://graceful-yoke-api.up.railway.app/element-service/api/all');
     const [state, setState] = useState([]);
 
     const [userRatings, setUserRatings] = useState({});
