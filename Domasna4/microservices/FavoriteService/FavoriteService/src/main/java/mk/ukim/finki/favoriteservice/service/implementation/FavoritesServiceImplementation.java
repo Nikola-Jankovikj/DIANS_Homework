@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class FavoritesServiceImplementation implements FavoritesService {
     private final FavoritesRepository favoritesRepository;
     private final RestTemplate restTemplate;
-    private String authUser = "foolish-development-users.up.railway.app";
+    private String authUser = "graceful-yoke-api.up.railway.app";
 
     @Override
     public void addToFavorites(Long userId, Long elementId) {
