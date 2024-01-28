@@ -5,7 +5,7 @@ import {useNavigate} from "react-router-dom";
 
 const PopupCard = ({obj, index, setAverageRatings, setRouteSites, handleAddToRoute}) => {
 
-    const [favorite, setFavorite] = useState();
+    const [favorite, setFavorite] = useState(false);
     const [myRating, setMyRating] = useState();
     const [averageRating, setAverageRating] = useState();
 
