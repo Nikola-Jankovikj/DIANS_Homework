@@ -41,7 +41,7 @@ public class SecurityConfiguration {
         http.cors(customizer ->
                 customizer.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(Arrays.asList("https://chosen-bells-api.up.railway.app", "graceful-yoke-api.up.railway.app")); // Allow all origins
+                    config.setAllowedOrigins(Arrays.asList("https://chosen-bells-api.up.railway.app")); // Allow all origins
                     config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(Arrays.asList("*")); // Allow all headers
                     config.setAllowCredentials(true);
@@ -50,19 +50,4 @@ public class SecurityConfiguration {
 
         return http.build();
     }
-
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*")); // Allow all origins
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*")); // Allow all headers
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-
 }
